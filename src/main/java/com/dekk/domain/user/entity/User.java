@@ -56,7 +56,6 @@ public class User {
     private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
-
     private User(String email, Provider provider, String providerId, UserStatus status) {
         this.email = email;
         this.provider = provider;
