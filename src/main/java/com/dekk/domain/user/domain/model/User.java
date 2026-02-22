@@ -1,61 +1,39 @@
-package com.dekk.domain.user.entity;
+package com.dekk.domain.user.domain.model;
 
-
-import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column
     private String nickname;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Provider provider; // "google", "kakao"
+    private Provider provider;
 
-    @Column(nullable = false)
-    private String providerId; // 소셜 서비스의 고유 아이디(sub 또는 id)
+    private String providerId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private UserStatus status;
 
     private Double height;
     private Double weight;
 
-    @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @CreatedDate
-    @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
+
     private User(String email, Provider provider, String providerId, UserStatus status) {
         this.email = email;
         this.provider = provider;
@@ -63,6 +41,7 @@ public class User {
         this.status = status;
         this.role = Role.MEMBER;
     }
+
     public static User createSocialUser(String email, Provider provider, String providerId) {
         return new User(email, provider, providerId, UserStatus.PENDING);
     }
@@ -88,5 +67,46 @@ public class User {
     public void deleteUser() {
         this.status = UserStatus.DELETED;
         this.deletedAt = LocalDateTime.now();
+    }
+
+    // Public setters for Mapper use (infrastructure layer)
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public void setHeight(Double height) {
+        this.height = height;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }
