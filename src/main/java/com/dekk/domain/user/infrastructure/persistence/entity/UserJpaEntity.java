@@ -2,25 +2,20 @@ package com.dekk.domain.user.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.dekk.domain.user.domain.model.Gender;
 import com.dekk.domain.user.domain.model.Provider;
 import com.dekk.domain.user.domain.model.Role;
 import com.dekk.domain.user.domain.model.UserStatus;
+import com.dekk.global.common.entity.BaseTimeEntity;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
-public class UserJpaEntity {
+public class UserJpaEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,12 +48,17 @@ public class UserJpaEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime deletedAt;
+    public UserJpaEntity(Long id, String email, String nickname, Role role, Provider provider, String providerId, UserStatus status, Double height, Double weight, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.status = status;
+        this.height = height;
+        this.weight = weight;
+        this.gender = gender;
+    }
 }

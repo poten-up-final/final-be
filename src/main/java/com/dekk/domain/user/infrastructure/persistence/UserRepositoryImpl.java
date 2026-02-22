@@ -41,7 +41,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(User user) {
-        UserJpaEntity entity = UserMapper.toEntity(user);
-        jpaRepository.delete(entity);
+        if (user.getId() != null) {
+            jpaRepository.deleteById(user.getId());
+        }
     }
 }

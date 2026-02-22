@@ -1,5 +1,6 @@
 package com.dekk.domain.user.domain.model;
 
+import com.dekk.global.common.model.BaseTimeModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,32 +8,32 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseTimeModel {
 
     private Long id;
-
     private String email;
-
     private String nickname;
-
     private Role role;
-
     private Provider provider;
-
     private String providerId;
-
     private UserStatus status;
-
     private Double height;
     private Double weight;
-
     private Gender gender;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime deletedAt;
+    public User(Long id, String email, String nickname, Role role, Provider provider, String providerId, UserStatus status, Double height, Double weight, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.status = status;
+        this.height = height;
+        this.weight = weight;
+        this.gender = gender;
+    }
 
     private User(String email, Provider provider, String providerId, UserStatus status) {
         this.email = email;
@@ -66,47 +67,6 @@ public class User {
 
     public void deleteUser() {
         this.status = UserStatus.DELETED;
-        this.deletedAt = LocalDateTime.now();
-    }
-
-    // Public setters for Mapper use (infrastructure layer)
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setStatus(UserStatus status) {
-        this.status = status;
-    }
-
-    public void setHeight(Double height) {
-        this.height = height;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
+        super.markAsDeleted();
     }
 }
