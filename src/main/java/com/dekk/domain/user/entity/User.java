@@ -13,7 +13,7 @@ import com.dekk.global.common.entity.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users") // DB의 예약어 충돌 방지를 위해 주로 복수형을 사용합니다.
+@Table(name = "users")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -22,9 +22,6 @@ public class User extends BaseTimeEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
-
-    @Column
-    private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -41,11 +38,11 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private UserStatus status;
 
-    private Double height;
-    private Double weight;
-
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Profile profile;
 
     public static User createSocialUser(String email, Provider provider, String providerId) {
         User user = new User();
@@ -58,20 +55,18 @@ public class User extends BaseTimeEntity {
     }
 
     public void completeOnboarding(String nickname, Double height, Double weight, Gender gender) {
-        this.nickname = nickname;
-        this.height = height;
-        this.weight = weight;
+        if (this.status != UserStatus.PENDING) {
+            throw new IllegalStateException("이미 온보딩이 완료된 사용자입니다.");
+        }
         this.gender = gender;
         this.status = UserStatus.ACTIVE;
+        this.profile = Profile.create(this, height, weight, nickname);
     }
 
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void updateBodyInfo(Double height, Double weight, Gender gender) {
-        this.height = height;
-        this.weight = weight;
+    public void updateProfileInfo(String nickname, Double height, Double weight, Gender gender) {
+        if(this.profile != null) {
+            this.profile.update(nickname, height, weight);
+        }
         this.gender = gender;
     }
 
