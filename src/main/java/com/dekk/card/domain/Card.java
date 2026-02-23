@@ -45,20 +45,15 @@ public class Card {
     private List<Long> tagIds = new ArrayList<>();
 
     @Column(name = "origin_id", nullable = false, updatable = false)
-    @Comment("플랫폼별 카드 고유 번호")
     private String originId;
 
     @Column(name = "is_active", nullable = false)
-    @Comment("활성화 여부")
     private Boolean isActive;
 
     @Enumerated(EnumType.STRING)
-    @Comment("플랫폼명")
     private Platform platform;
 
-    @Comment("추천 키")
     private Integer height;
 
-    @Comment("추천 몸무게")
     private Integer weight;
 }
