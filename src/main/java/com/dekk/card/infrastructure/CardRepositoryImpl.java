@@ -1,7 +1,8 @@
-package com.dekk.card.infrastructure.jpa;
+package com.dekk.card.infrastructure;
 
 import com.dekk.card.domain.model.Card;
 import com.dekk.card.domain.repository.CardRepository;
+import com.dekk.card.infrastructure.jpa.CardJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
