@@ -1,5 +1,6 @@
 package com.dekk.card.domain.model;
 
+import com.dekk.common.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "card_products")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CardProduct {
+public class CardProduct extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

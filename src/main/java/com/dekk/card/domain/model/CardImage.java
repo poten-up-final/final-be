@@ -3,6 +3,7 @@ package com.dekk.card.domain.model;
 import com.dekk.card.application.command.CardImageCreateCommand;
 import com.dekk.card.domain.exception.CardBusinessException;
 import com.dekk.card.domain.exception.CardErrorCode;
+import com.dekk.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "card_images")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CardImage {
+public class CardImage extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
