@@ -1,6 +1,7 @@
 package com.dekk.domain.user.entity;
 
 
+import com.dekk.domain.user.model.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,26 +30,32 @@ public class Profile {
     @Column(nullable = false, length = 20, unique = true)
     private String nickname;
 
-    private Profile(User user, Double height, Double weight, String nickname) {
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+    private Profile(User user, Double height, Double weight, String nickname, Gender gender) {
         this.user = user;
         this.height = height;
         this.weight = weight;
         this.nickname = nickname;
+        this.gender = gender;
     }
 
-    public static Profile create(User user, Double height, Double weight, String nickname) {
-        return new Profile(user, height, weight, nickname);
+    public static Profile create(User user, Double height, Double weight, String nickname, Gender gender) {
+        return new Profile(user, height, weight, nickname, gender);
     }
 
-    public void update(String nickname, Double height, Double weight) {
-            if (nickname != null && !nickname.isBlank()) {
-                this.nickname = nickname;
-            }
-            if (height != null) {
-                this.height = height;
-            }
-            if (weight != null) {
-                this.weight = weight;
+    public void update(String nickname, Double height, Double weight, Gender gender) {
+        if (nickname != null && !nickname.isBlank()) {
+            this.nickname = nickname;
+        }
+        if (height != null) {
+            this.height = height;
+        }
+        if (weight != null) {
+            this.weight = weight;
+        }
+        if (gender != null) {
+            this.gender = gender;
         }
     }
 }
