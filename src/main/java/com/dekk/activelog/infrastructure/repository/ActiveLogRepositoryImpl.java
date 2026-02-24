@@ -1,8 +1,7 @@
-package com.dekk.activelog.infrastructure.persistence.repository;
+package com.dekk.activelog.infrastructure.repository;
 
 import com.dekk.activelog.domain.model.ActiveLog;
 import com.dekk.activelog.domain.repository.ActiveLogRepository;
-import com.dekk.activelog.infrastructure.persistence.entity.ActiveLogEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
@@ -15,7 +14,7 @@ public class ActiveLogRepositoryImpl implements ActiveLogRepository {
 
     @Override
     public ActiveLog save(ActiveLog activeLog) {
-        return jpaRepository.save(activeLog)
+        return jpaRepository.save(activeLog);
     }
 
     @Override
@@ -25,11 +24,11 @@ public class ActiveLogRepositoryImpl implements ActiveLogRepository {
 
     @Override
     public Optional<ActiveLog> findByUserIdAndCardId(Long userId, Long cardId) {
-        return jpaRepository.findByUserIdAndCardId(userId, cardId).map(ActiveLogEntity::toDomain);
+        return jpaRepository.findByUserIdAndCardId(userId, cardId);
     }
 
     @Override
     public void delete(ActiveLog activeLog) {
-        jpaRepository.deleteById(activeLog.getId());
+        jpaRepository.delete(activeLog);
     }
 }

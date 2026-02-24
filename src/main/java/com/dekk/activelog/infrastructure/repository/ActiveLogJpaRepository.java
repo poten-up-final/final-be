@@ -1,9 +1,10 @@
-package com.dekk.activelog.infrastructure.persistence.repository;
+package com.dekk.activelog.infrastructure.repository;
 
+import com.dekk.activelog.domain.model.ActiveLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
-public interface ActiveLogJpaRepository extends JpaRepository<ActiveLogEntity, Long> {
+public interface ActiveLogJpaRepository extends JpaRepository<ActiveLog, Long> {
     boolean existsByUserIdAndCardId(Long userId, Long cardId);
-    Optional<ActiveLogEntity> findByUserIdAndCardId(Long userId, Long cardId);
+    Optional<ActiveLog> findByUserIdAndCardId(Long userId, Long cardId);
 }
