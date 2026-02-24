@@ -1,5 +1,7 @@
 package com.dekk.domain.user.entity;
 
+import com.dekk.common.error.BusinessException;
+import com.dekk.common.error.UserErrorCode;
 import com.dekk.domain.user.model.Gender;
 import com.dekk.domain.user.model.Provider;
 import com.dekk.domain.user.model.Role;
@@ -8,12 +10,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.dekk.global.common.entity.BaseTimeEntity;
+import com.dekk.common.entity.BaseTimeEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users") // DB의 예약어 충돌 방지를 위해 주로 복수형을 사용합니다.
+@Table(name = "users")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -22,9 +24,6 @@ public class User extends BaseTimeEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
-
-    @Column
-    private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -41,11 +40,8 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private UserStatus status;
 
-    private Double height;
-    private Double weight;
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Profile profile;
 
     public static User createSocialUser(String email, Provider provider, String providerId) {
         User user = new User();
@@ -58,25 +54,25 @@ public class User extends BaseTimeEntity {
     }
 
     public void completeOnboarding(String nickname, Double height, Double weight, Gender gender) {
-        this.nickname = nickname;
-        this.height = height;
-        this.weight = weight;
-        this.gender = gender;
+        validatePendingStatus();
         this.status = UserStatus.ACTIVE;
+        this.profile = Profile.create(this, height, weight, nickname,gender);
     }
 
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void updateBodyInfo(Double height, Double weight, Gender gender) {
-        this.height = height;
-        this.weight = weight;
-        this.gender = gender;
+    public void updateProfileInfo(String nickname, Double height, Double weight, Gender gender) {
+        if(this.profile != null) {
+            this.profile.update(nickname, height, weight, gender);
+        }
     }
 
     public void deleteUser() {
         this.status = UserStatus.DELETED;
         this.markAsDeleted();
+    }
+
+    private void validatePendingStatus() {
+        if (this.status != UserStatus.PENDING) {
+            throw new BusinessException(UserErrorCode.ALREADY_ONBOARDED);
+        }
     }
 }
