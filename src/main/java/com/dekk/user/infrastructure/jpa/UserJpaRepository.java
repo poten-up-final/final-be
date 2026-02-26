@@ -1,4 +1,4 @@
-package com.dekk.user.infrastructure.repository;
+package com.dekk.user.infrastructure.jpa;
 
 import com.dekk.user.domain.model.User;
 import com.dekk.user.domain.model.enums.Provider;

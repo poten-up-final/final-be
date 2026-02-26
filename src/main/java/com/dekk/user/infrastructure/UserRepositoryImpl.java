@@ -1,8 +1,9 @@
-package com.dekk.user.infrastructure.repository;
+package com.dekk.user.infrastructure;
 
 import com.dekk.user.domain.model.User;
 import com.dekk.user.domain.model.enums.Provider;
 import com.dekk.user.domain.repository.UserRepository;
+import com.dekk.user.infrastructure.jpa.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

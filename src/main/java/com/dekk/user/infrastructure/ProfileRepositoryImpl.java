@@ -1,7 +1,8 @@
-package com.dekk.user.infrastructure.repository;
+package com.dekk.user.infrastructure;
 
 import com.dekk.user.domain.model.Profile;
 import com.dekk.user.domain.repository.ProfileRepository;
+import com.dekk.user.infrastructure.jpa.ProfileJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
