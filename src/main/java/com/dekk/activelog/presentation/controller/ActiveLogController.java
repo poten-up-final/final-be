@@ -3,9 +3,11 @@ package com.dekk.activelog.presentation.controller;
 import com.dekk.activelog.application.ActiveLogCommandService;
 import com.dekk.activelog.application.dto.command.SwipeCommand;
 import com.dekk.activelog.presentation.request.SwipeRequest;
+import com.dekk.activelog.presentation.response.ActiveLogResultCode; // 추가
 import com.dekk.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity; // 추가
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +23,7 @@ public class ActiveLogController implements ActiveLogApi {
 
     @Override
     @PostMapping("/{cardId}/swipe")
-    public ApiResponse<Void> swipeCard(
+    public ResponseEntity<ApiResponse<Void>> swipeCard(
         @PathVariable("cardId") Long cardId,
         @Valid @RequestBody SwipeRequest request
     ) {
@@ -29,12 +31,12 @@ public class ActiveLogController implements ActiveLogApi {
         Long userId = null;
 
         if (userId == null) {
-            return new ApiResponse<>("SAL20001", "비회원 스와이프 액션 (수집 생략)", null);
+            return ResponseEntity.ok(ApiResponse.from(ActiveLogResultCode.GUEST_SWIPE_IGNORED));
         }
 
         SwipeCommand command = new SwipeCommand(userId, cardId, request.swipeType());
         activeLogCommandService.saveSwipeAction(command);
 
-        return new ApiResponse<>("SAL20001", "스와이프 평가가 정상적으로 기록되었습니다.", null);
+        return ResponseEntity.ok(ApiResponse.from(ActiveLogResultCode.SWIPE_SUCCESS));
     }
 }
