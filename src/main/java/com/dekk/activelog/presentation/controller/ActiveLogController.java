@@ -3,11 +3,11 @@ package com.dekk.activelog.presentation.controller;
 import com.dekk.activelog.application.ActiveLogCommandService;
 import com.dekk.activelog.application.dto.command.SwipeCommand;
 import com.dekk.activelog.presentation.request.SwipeRequest;
-import com.dekk.activelog.presentation.response.ActiveLogResultCode; // 추가
+import com.dekk.activelog.presentation.response.ActiveLogResultCode;
 import com.dekk.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity; // 추가
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
