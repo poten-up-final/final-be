@@ -15,6 +15,7 @@ public enum AuthErrorCode implements ErrorCode {
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
+
     @Override
     public HttpStatus status() {
         return httpStatus;
