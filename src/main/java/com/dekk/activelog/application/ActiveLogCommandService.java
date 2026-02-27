@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ActiveLogCommandService {
 
     private final ActiveLogRepository activeLogRepository;
 
-    @Transactional
     public void saveSwipeAction(SwipeCommand command) {
         if (activeLogRepository.existsByUserIdAndCardId(command.userId(), command.cardId())) {
             return;
