@@ -19,26 +19,18 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
     private final String role;
 
     @Getter
-    private final User user;
     private final Map<String, Object> attributes;
 
     public CustomUserDetails(User user, Map<String, Object> attributes) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.role = user.getRole().getKey();
-        this.user = user;
         this.attributes = attributes;
     }
-
-    public CustomUserDetails(User user) {
-        this(user, Collections.emptyMap());
-    }
-
     public CustomUserDetails(Long id, String email, String role) {
         this.id = id;
         this.email = email;
         this.role = role;
-        this.user = null;
         this.attributes = Collections.emptyMap();
     }
 
@@ -59,7 +51,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getPassword() {
-        return null; // 소셜 로그인이므로 패스워드 사용 안 함
+        return null;
     }
 
     @Override
