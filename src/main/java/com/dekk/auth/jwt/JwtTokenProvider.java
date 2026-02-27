@@ -24,12 +24,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-
 @Component
 public class JwtTokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
     private final Key key;
+
     private final long accessTokenValidityTime;
     private final long refreshTokenValidityTime;
 
