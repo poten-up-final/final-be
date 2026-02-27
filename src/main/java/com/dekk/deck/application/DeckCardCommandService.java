@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DeckCardCommandService {
 
     private final DeckRepository deckRepository;
     private final DeckCardRepository deckCardRepository;
 
-    @Transactional
     public void saveToDefaultDeck(Long userId, Long cardId) {
         Deck defaultDeck = deckRepository.findByUserIdAndIsDefaultTrue(userId)
             .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_NOT_FOUND));
