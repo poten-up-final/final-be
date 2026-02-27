@@ -50,7 +50,7 @@ public class Deck extends BaseTimeEntity {
     public static Deck createDefault(Long userId) {
         String defaultName = "나의 기본 보관함";
         validate(userId, defaultName);
-        return new Deck(userId, defaultName,true);
+        return new Deck(userId, defaultName, true);
     }
 
     private static void validate(Long userId, String name) {
