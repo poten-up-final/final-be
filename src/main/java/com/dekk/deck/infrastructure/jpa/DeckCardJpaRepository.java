@@ -5,7 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface DeckCardJpaRepository extends JpaRepository<DeckCard, Long> {
     boolean existsByDeckIdAndCardId(Long deckId, Long cardId);
     Page<DeckCard> findAllByDeckId(Long deckId, Pageable pageable);
+
+    Optional<DeckCard> findByDeckIdAndCardId(Long deckId, Long CardId);
 }
