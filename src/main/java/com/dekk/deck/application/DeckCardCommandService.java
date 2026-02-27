@@ -28,4 +28,14 @@ public class DeckCardCommandService {
 
         deckCardRepository.save(DeckCard.create(defaultDeck.getId(), cardId));
     }
+
+    public void removeFromDefaultDeck(Long userId, Long cardId) {
+        Deck defaultDeck = deckRepository.findByUserIdAndIsDefaultTrue(userId)
+            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_NOT_FOUND));
+
+        DeckCard deckCard = deckCardRepository.findByDeckIdAndCardId(defaultDeck.getId(), cardId)
+            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CARD_NOT_FOUND_IN_DECK));
+
+        deckCardRepository.delete(deckCard);
+    }
 }

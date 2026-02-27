@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "Deck Command", description = "보관함 조작 API (Command)")
 public interface DeckCommandApi {
+    @Operation(summary = "기본 보관함에서 특정 카드 저장 취소 (Soft Delete)")
+    ResponseEntity<ApiResponse<Void>> removeCardFromDefaultDeck(Long userId, Long cardId);
 
     @Operation(summary = "기본 보관함 카드 저장", description = "유저의 기본 보관함에 특정 카드를 저장합니다.")
     ResponseEntity<ApiResponse<Void>> addCardToDefaultDeck(
