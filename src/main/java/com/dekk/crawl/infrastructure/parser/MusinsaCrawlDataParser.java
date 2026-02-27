@@ -37,6 +37,7 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
     @Override
     public List<CardCreateCommand> parse(String rawData) {
         JsonNode rootArray;
+
         try {
             rootArray = objectMapper.readTree(rawData);
         } catch (JsonProcessingException e) {
@@ -47,6 +48,7 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
 
         for (JsonNode snap : rootArray) {
             CardCreateCommand command = parseSnap(snap);
+
             if (command != null) {
                 commands.add(command);
             }
@@ -92,13 +94,16 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
 
     private String parseTags(JsonNode snap) {
         JsonNode tagsNode = snap.path("tags");
+
         if (!tagsNode.isArray() || tagsNode.isEmpty()) {
             return null;
         }
 
         StringJoiner joiner = new StringJoiner(",");
+
         for (JsonNode tag : tagsNode) {
             String name = tag.path("name").asText(null);
+
             if (name != null) {
                 joiner.add(name);
             }
@@ -111,26 +116,33 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
     private Map<String, String> parseOptions(JsonNode snap) {
         Map<String, String> optionsByGoodsNo = new HashMap<>();
         JsonNode goods = snap.path("goods");
+
         if (!goods.isArray()) {
             return optionsByGoodsNo;
         }
 
         for (JsonNode good : goods) {
             String goodsNo = good.path("goodsNo").asText(null);
+
             if (goodsNo == null) {
                 continue;
             }
 
             JsonNode options = good.path("options");
+
             if (options.isArray() && !options.isEmpty()) {
                 StringJoiner joiner = new StringJoiner(", ");
+
                 for (JsonNode option : options) {
                     String optionName = option.path("optionName").asText(null);
+
                     if (optionName != null) {
                         joiner.add(optionName);
                     }
                 }
+
                 String result = joiner.toString();
+
                 if (!result.isEmpty()) {
                     optionsByGoodsNo.put(goodsNo, result);
                 }
@@ -143,12 +155,14 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
     private Map<String, Boolean> parseMatchedFlags(JsonNode snap) {
         Map<String, Boolean> matchedByGoodsNo = new HashMap<>();
         JsonNode goods = snap.path("goods");
+
         if (!goods.isArray()) {
             return matchedByGoodsNo;
         }
 
         for (JsonNode good : goods) {
             String goodsNo = good.path("goodsNo").asText(null);
+
             if (goodsNo != null) {
                 matchedByGoodsNo.put(goodsNo, good.path("isMatched").asBoolean(false));
             }
@@ -165,12 +179,14 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
     ) {
         List<ProductCreateCommand> products = new ArrayList<>();
         JsonNode detailList = snap.path("goods_detail_list");
+
         if (!detailList.isArray()) {
             return products;
         }
 
         for (JsonNode detail : detailList) {
             String goodsNo = detail.path("goodsNo").asText(null);
+
             if (goodsNo == null) {
                 continue;
             }
@@ -212,6 +228,7 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
         if (node.isMissingNode() || node.isNull()) {
             return null;
         }
+
         return node.asInt();
     }
 }

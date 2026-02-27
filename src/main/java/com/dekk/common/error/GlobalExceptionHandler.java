@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = e.errorCode();
         crawlLog.warn("Crawl Exception : [Code: {}] {}", errorCode.code(), errorCode.message(), e);
         return ResponseEntity
-            .status(errorCode.status())
-            .body(ErrorResponse.from(errorCode));
+                .status(errorCode.status())
+                .body(ErrorResponse.from(errorCode));
     }
 
     /**
