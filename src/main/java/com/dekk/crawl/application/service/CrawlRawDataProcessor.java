@@ -40,7 +40,7 @@ public class CrawlRawDataProcessor {
             List<CardCreateCommand> commands = parseRawData(rawData);
             saveNewCards(commands);
             rawData.markAsCompleted();
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
             log.error("raw data 처리 실패: rawDataId={}", rawDataId, e);
             rawData.fail();
         }
