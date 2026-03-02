@@ -12,11 +12,10 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "카드 조회 API", description = "카드 조회 관련 API")
 public interface CardQueryApi {
@@ -99,6 +98,7 @@ public interface CardQueryApi {
     })
     ResponseEntity<ApiResponse<PageResponse<?>>> getCards(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails,
-            @ParameterObject Pageable pageable
+            @Parameter(description = "페이지 번호 (0부터 시작)", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int size
     );
 }
