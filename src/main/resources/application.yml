@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: DEKK
+  profiles:
+    active: dev
+
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 30
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+jwt:
+  access-token-validity-in-seconds: 3600
+  refresh-token-validity-in-seconds: 1209600

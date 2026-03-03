@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dekk-postgres
+    restart: always
+    ports:
+      - "65432:5432"
+    environment:
+      POSTGRES_USER: dekk_user
+      POSTGRES_PASSWORD: dekk_password
+      POSTGRES_DB: dekk
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
