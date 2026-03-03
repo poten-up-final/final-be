@@ -31,10 +31,6 @@ public class ActiveLogController implements ActiveLogApi {
         @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
 
-        if (userDetails == null) {
-            return ResponseEntity.ok(ApiResponse.from(ActiveLogResultCode.GUEST_SWIPE_IGNORED));
-        }
-
         SwipeCommand command = new SwipeCommand(userDetails.getId(), cardId, request.swipeType());
         activeLogCommandService.saveSwipeAction(command);
 
