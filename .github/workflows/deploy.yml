@@ -2,7 +2,7 @@ name: DEKK Project CD
 
 on:
   push:
-    branches: [ "DK-82" ] # 테스트 완료 후 "main" 또는 "develop"으로 변경하세요
+    branches: [ "develop", "main"]
 
 jobs:
   deploy:
