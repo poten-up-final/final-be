@@ -49,6 +49,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs",
+                                "/w/v1/auth/refresh",
                                 "/w/v1/cards",
                                 "/w/v1/cards/*/swipe",
                                 "/w/v1/guests/cards/**",
