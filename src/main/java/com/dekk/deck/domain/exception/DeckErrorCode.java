@@ -11,7 +11,9 @@ public enum DeckErrorCode implements ErrorCode {
     DECK_ID_IS_REQUIRED(HttpStatus.BAD_REQUEST, "ED40003", "보관함 ID는 필수값입니다"),
     CARD_ID_IS_REQUIRED(HttpStatus.BAD_REQUEST, "ED40004", "카드 ID는 필수값입니다"),
     DEFAULT_DECK_NOT_FOUND(HttpStatus.NOT_FOUND, "ED40401", "기본 보관함을 찾을 수 없습니다"),
-    CARD_NOT_FOUND_IN_DECK(HttpStatus.NOT_FOUND, "ED40402", "보관함에 해당 카드가 존재하지 않습니다");
+    CARD_NOT_FOUND_IN_DECK(HttpStatus.NOT_FOUND, "ED40402", "보관함에 해당 카드가 존재하지 않습니다"),
+    DEFAULT_DECK_CREATE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "ED50001", "기본 보관함 생성에 실패했습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
