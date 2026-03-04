@@ -2,12 +2,14 @@ package com.dekk.user.application;
 
 import com.dekk.user.application.command.UserOnboardingCommand;
 import com.dekk.user.application.command.UserProfileUpdateCommand;
+import com.dekk.user.domain.event.UserOnboardedEvent;
 import com.dekk.user.domain.exception.UserBusinessException;
 import com.dekk.user.domain.exception.UserErrorCode;
 import com.dekk.user.domain.model.User;
 import com.dekk.user.domain.repository.ProfileRepository;
 import com.dekk.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ public class UserCommandService {
 
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public void onboardUser(Long userId, UserOnboardingCommand command) {
         User user = userRepository.findById(userId)
@@ -28,6 +31,8 @@ public class UserCommandService {
         }
 
         user.completeOnboarding(command);
+
+        eventPublisher.publishEvent(new UserOnboardedEvent(user.getId()));
     }
 
     public void updateProfileInfo(Long userId, UserProfileUpdateCommand command) {
