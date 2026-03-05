@@ -22,8 +22,7 @@ public class UserCommandService {
     private final DeckCommandService deckCommandService;
 
     public void onboardUser(Long userId, UserOnboardingCommand command) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
+        User user = getUser(userId);
 
         if (profileRepository.existsByNickname(command.nickname())) {
             throw new UserBusinessException(UserErrorCode.DUPLICATE_NICKNAME);
@@ -36,8 +35,7 @@ public class UserCommandService {
     }
 
     public void updateProfileInfo(Long userId, UserProfileUpdateCommand command) {
-        User user = userRepository.findWithProfileById(userId)
-                .orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
+        User user = getUserWithProfile(userId);
 
         if (command.nickname() != null && !command.nickname().equals(user.getProfile().getNickname())) {
             if (profileRepository.existsByNickname(command.nickname())) {
@@ -49,9 +47,18 @@ public class UserCommandService {
     }
 
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
+        User user = getUser(userId);
 
         user.deleteUser();
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
+    }
+
+    private User getUserWithProfile(Long userId) {
+        return userRepository.findWithProfileById(userId)
+                .orElseThrow(() -> new UserBusinessException(UserErrorCode.USER_NOT_FOUND));
     }
 }
