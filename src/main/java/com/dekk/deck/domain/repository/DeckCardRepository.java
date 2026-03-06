@@ -4,6 +4,8 @@ import com.dekk.deck.domain.model.DeckCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface DeckCardRepository {
@@ -17,4 +19,6 @@ public interface DeckCardRepository {
     void delete(DeckCard deckCard);
 
     void deleteAllByDeckId(Long deckId);
+
+    Map<Long, Long> countCardsByDeckIds(List<Long> deckIds);
 }
