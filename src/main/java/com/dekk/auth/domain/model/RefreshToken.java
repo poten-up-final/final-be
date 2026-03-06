@@ -1,5 +1,7 @@
 package com.dekk.auth.domain.model;
 
+import com.dekk.auth.domain.exception.AuthBusinessException;
+import com.dekk.auth.domain.exception.AuthErrorCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,7 @@ public class RefreshToken {
 
     public static RefreshToken create(Long userId, String token) {
         if(userId == null || token == null || token.isBlank()) {
-            throw new IllegalArgumentException("UserId와 Token은 필수입니다.");
+            throw new AuthBusinessException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
         return new RefreshToken(userId, token);
     }

@@ -40,6 +40,5 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     public void deleteByUserId(Long userId) {
         String key = PREFIX + userId;
         redisTemplate.delete(key);
-
     }
 }

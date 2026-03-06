@@ -1,5 +1,7 @@
 package com.dekk.auth.domain.model;
 
+import com.dekk.auth.domain.exception.AuthBusinessException;
+import com.dekk.auth.domain.exception.AuthErrorCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +19,7 @@ public class BlacklistAccessToken {
 
     public static BlacklistAccessToken create(String accessToken) {
         if(accessToken == null || accessToken.isBlank()) {
-            throw new IllegalArgumentException("AccessToken은 필수입니다.");
+            throw new AuthBusinessException(AuthErrorCode.INVALID_TOKEN);
         }
         return new BlacklistAccessToken(accessToken, "logout");
     }
