@@ -40,4 +40,9 @@ public class DeckCardRepositoryImpl implements DeckCardRepository {
     public void delete(DeckCard deckCard) {
         deckCardJpaRepository.delete(deckCard);
     }
+
+    @Override
+    public void deleteAllByDeckId(Long deckId) {
+        deckCardJpaRepository.deleteAllByDeckId(deckId);
+    }
 }
