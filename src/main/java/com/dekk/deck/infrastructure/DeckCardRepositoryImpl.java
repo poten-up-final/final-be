@@ -8,11 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import static java.util.Collections.emptyMap;
 
 @Repository
 @RequiredArgsConstructor
@@ -53,7 +53,7 @@ public class DeckCardRepositoryImpl implements DeckCardRepository {
     @Override
     public Map<Long, Long> countCardsByDeckIds(List<Long> deckIds) {
         if (deckIds == null || deckIds.isEmpty()) {
-            return java.util.Collections.emptyMap();
+            return emptyMap();
         }
 
         return deckCardJpaRepository.countCardsByDeckIds(deckIds).stream()
