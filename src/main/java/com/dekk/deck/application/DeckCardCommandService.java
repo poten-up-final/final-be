@@ -21,8 +21,7 @@ public class DeckCardCommandService {
     private final DeckCardRepository deckCardRepository;
 
     public void saveToDefaultDeck(Long userId, Long cardId) {
-        Deck defaultDeck = deckRepository.findByUserIdAndIsDefaultTrue(userId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_NOT_FOUND));
+        Deck defaultDeck = getDefaultDeckByUserId(userId);
 
         if (deckCardRepository.existsByDeckIdAndCardId(defaultDeck.getId(), cardId)) {
             return;
@@ -32,38 +31,50 @@ public class DeckCardCommandService {
     }
 
     public void removeFromDefaultDeck(Long userId, Long cardId) {
-        Deck defaultDeck = deckRepository.findByUserIdAndIsDefaultTrue(userId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_NOT_FOUND));
-
-        DeckCard deckCard = deckCardRepository.findByDeckIdAndCardId(defaultDeck.getId(), cardId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CARD_NOT_FOUND_IN_DECK));
+        Deck defaultDeck = getDefaultDeckByUserId(userId);
+        DeckCard deckCard = getDeckCardByDeckIdAndCardId(defaultDeck.getId(), cardId);
 
         deckCardRepository.delete(deckCard);
     }
 
     public void saveToCustomDeck(Long userId, Long customDeckId, Long cardId) {
-        Deck customDeck = deckRepository.findByIdAndUserId(customDeckId, userId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+        Deck customDeck = getCustomDeckByUserId(customDeckId, userId);
 
         if (deckCardRepository.existsByDeckIdAndCardId(customDeck.getId(), cardId)) {
             return;
         }
 
-        long currentCardCount = deckCardRepository.countByDeckId(customDeck.getId());
-        if (currentCardCount >= MAX_CUSTOM_DECK_CARD_COUNT) {
-            throw new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_CARD_LIMIT_EXCEEDED);
-        }
+        validateCustomDeckCardLimit(customDeck.getId());
 
         deckCardRepository.save(DeckCard.create(customDeck.getId(), cardId));
     }
 
     public void removeFromCustomDeck(Long userId, Long customDeckId, Long cardId) {
-        Deck customDeck = deckRepository.findByIdAndUserId(customDeckId, userId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
-
-        DeckCard deckCard = deckCardRepository.findByDeckIdAndCardId(customDeck.getId(), cardId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CARD_NOT_FOUND_IN_DECK));
+        Deck customDeck = getCustomDeckByUserId(customDeckId, userId);
+        DeckCard deckCard = getDeckCardByDeckIdAndCardId(customDeck.getId(), cardId);
 
         deckCardRepository.delete(deckCard);
+    }
+
+    private Deck getDefaultDeckByUserId(Long userId) {
+        return deckRepository.findByUserIdAndIsDefaultTrue(userId)
+            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_NOT_FOUND));
+    }
+
+    private Deck getCustomDeckByUserId(Long deckId, Long userId) {
+        return deckRepository.findByIdAndUserId(deckId, userId)
+            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+    }
+
+    private DeckCard getDeckCardByDeckIdAndCardId(Long deckId, Long cardId) {
+        return deckCardRepository.findByDeckIdAndCardId(deckId, cardId)
+            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CARD_NOT_FOUND_IN_DECK));
+    }
+
+    private void validateCustomDeckCardLimit(Long deckId) {
+        long currentCardCount = deckCardRepository.countByDeckId(deckId);
+        if (currentCardCount >= MAX_CUSTOM_DECK_CARD_COUNT) {
+            throw new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_CARD_LIMIT_EXCEEDED);
+        }
     }
 }
