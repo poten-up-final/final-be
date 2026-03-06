@@ -28,7 +28,7 @@ public class AuthController implements AuthApi {
     ) {
         TokenRefreshResult result = authCommandService.refreshToken(request.toCommand());
 
-        return ResponseEntity.ok(ApiResponse.of(AuthResultCode.TOKEN_REFRESH_SUCCESS, TokenResponse.from(result)));
+        return ResponseEntity.ok(ApiResponse.of(AuthResultCode.REISSUE_SUCCESS, TokenResponse.from(result)));
     }
 
     @Override
