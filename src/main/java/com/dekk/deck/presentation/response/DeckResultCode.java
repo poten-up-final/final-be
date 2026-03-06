@@ -20,7 +20,18 @@ public enum DeckResultCode implements ResultCode {
     private final String code;
     private final String message;
 
-    @Override public HttpStatus status() { return status; }
-    @Override public String code() { return code; }
-    @Override public String message() { return message; }
+    @Override
+    public HttpStatus status() {
+        return status;
+    }
+
+    @Override
+    public String code() {
+        return code;
+    }
+
+    @Override
+    public String message() {
+        return message;
+    }
 }

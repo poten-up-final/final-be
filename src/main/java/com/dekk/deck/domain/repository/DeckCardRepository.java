@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface DeckCardRepository {
     DeckCard save(DeckCard deckCard);
+
     boolean existsByDeckIdAndCardId(Long deckId, Long cardId);
 
     Page<DeckCard> findAllByDeckId(Long deckId, Pageable pageable);
