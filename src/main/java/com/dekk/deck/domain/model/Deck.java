@@ -76,7 +76,7 @@ public class Deck extends BaseTimeEntity {
         }
     }
 
-    private void validateCustomModifiable() {
+    public void validateCustomModifiable() {
         if (this.isDefault) {
             throw new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_CANNOT_BE_MODIFIED);
         }
