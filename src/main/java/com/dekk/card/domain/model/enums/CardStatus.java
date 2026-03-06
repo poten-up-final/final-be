@@ -12,4 +12,8 @@ public enum CardStatus {
     DELETE_REQUESTED("삭제 요청 됨");
 
     private final String description;
+
+    public boolean canChangeStatus() {
+        return this != DELETE_REQUESTED;
+    }
 }
