@@ -39,9 +39,9 @@ public class CustomDeckCommandController implements CustomDeckCommandApi {
     @Override
     @PatchMapping("/{customDeckId}")
     public ResponseEntity<ApiResponse<Void>> updateCustomDeckName(
+        @AuthenticationPrincipal CustomUserDetails userDetails,
         @PathVariable("customDeckId") Long customDeckId,
-        @Valid @RequestBody CustomDeckUpdateRequest request,
-        @AuthenticationPrincipal CustomUserDetails userDetails
+        @Valid @RequestBody CustomDeckUpdateRequest request
     ) {
         customDeckCommandService.updateCustomDeckName(userDetails.getId(), customDeckId, request.toCommand());
 
@@ -51,8 +51,8 @@ public class CustomDeckCommandController implements CustomDeckCommandApi {
     @Override
     @DeleteMapping("/{customDeckId}")
     public ResponseEntity<ApiResponse<Void>> deleteCustomDeck(
-        @PathVariable("customDeckId") Long customDeckId,
-        @AuthenticationPrincipal CustomUserDetails userDetails
+        @AuthenticationPrincipal CustomUserDetails userDetails,
+        @PathVariable("customDeckId") Long customDeckId
     ) {
         customDeckCommandService.deleteCustomDeck(userDetails.getId(), customDeckId);
 

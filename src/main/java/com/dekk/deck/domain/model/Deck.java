@@ -54,6 +54,10 @@ public class Deck extends BaseTimeEntity {
         return new Deck(userId, name, false);
     }
 
+    public void deleteCustom() {
+        validateCustomModifiable();
+    }
+    
     private static void validateEmpty(Long userId, String name) {
         if (userId == null) {
             throw new DeckBusinessException(DeckErrorCode.USER_ID_IS_REQUIRED_TO_CREATE);
