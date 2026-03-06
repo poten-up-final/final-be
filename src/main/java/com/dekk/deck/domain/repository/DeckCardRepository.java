@@ -15,4 +15,6 @@ public interface DeckCardRepository {
     Optional<DeckCard> findByDeckIdAndCardId(Long deckId, Long cardId);
 
     void delete(DeckCard deckCard);
+
+    void deleteAllByDeckId(Long deckId);
 }

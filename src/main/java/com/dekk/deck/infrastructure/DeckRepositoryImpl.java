@@ -32,4 +32,9 @@ public class DeckRepositoryImpl implements DeckRepository {
     public Optional<Deck> findByIdAndUserId(Long id, Long userId) {
         return deckJpaRepository.findByIdAndUserId(id, userId);
     }
+
+    @Override
+    public void delete(Deck deck) {
+        deckJpaRepository.delete(deck);
+    }
 }

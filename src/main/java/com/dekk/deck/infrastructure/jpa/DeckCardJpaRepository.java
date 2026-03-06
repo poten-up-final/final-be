@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface DeckCardJpaRepository extends JpaRepository<DeckCard, Long> {
     boolean existsByDeckIdAndCardId(Long deckId, Long cardId);
     Page<DeckCard> findAllByDeckId(Long deckId, Pageable pageable);
-
     Optional<DeckCard> findByDeckIdAndCardId(Long deckId, Long CardId);
+    void deleteAllByDeckId(Long deckId);
 }

@@ -8,4 +8,5 @@ public interface DeckRepository {
     Optional<Deck> findByUserIdAndIsDefaultTrue(Long userId);
     long countByUserIdAndIsDefaultFalse(Long userId);
     Optional<Deck> findByIdAndUserId(Long id, Long userId);
+    void delete(Deck deck);
 }
