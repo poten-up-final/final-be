@@ -3,6 +3,7 @@ package com.dekk.card.infrastructure;
 import com.dekk.card.domain.model.Card;
 import com.dekk.card.domain.model.enums.CardStatus;
 import com.dekk.card.domain.model.enums.Platform;
+import com.dekk.card.domain.model.enums.ProductGender;
 import com.dekk.card.domain.repository.CardRepository;
 import com.dekk.card.infrastructure.jpa.CardJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +46,24 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public List<Card> findAllByIdInWithProducts(List<Long> ids) {
         return cardJpaRepository.findAllByIdInWithProducts(ids);
+    }
+
+    @Override
+    public List<Card> findRecommendCandidates(
+            List<Long> excludedCardIds,
+            List<ProductGender> genders,
+            int minHeight,
+            int maxHeight,
+            int minWeight,
+            int maxWeight
+    ) {
+        return cardJpaRepository.findRecommendCandidates(
+                excludedCardIds,
+                genders,
+                minHeight,
+                maxHeight,
+                minWeight,
+                maxWeight
+        );
     }
 }
