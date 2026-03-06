@@ -99,6 +99,18 @@ public class Card extends BaseTimeEntity {
     }
 
     public void approve() {
+        validateStatusChangeable();
         this.status = CardStatus.APPROVED;
+    }
+
+    public void reject() {
+        validateStatusChangeable();
+        this.status = CardStatus.REJECTED;
+    }
+
+    private void validateStatusChangeable() {
+        if (!this.status.canChangeStatus()) {
+            throw new CardBusinessException(CardErrorCode.CANNOT_CHANGE_STATUS_OF_DELETE_REQUESTED);
+        }
     }
 }
