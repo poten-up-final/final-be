@@ -3,6 +3,7 @@ package com.dekk.auth.infrastructure.redis;
 import com.dekk.auth.domain.model.RefreshToken;
 import com.dekk.auth.domain.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
@@ -23,22 +25,35 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     @Override
     public void save(RefreshToken refreshToken) {
         String key = PREFIX + refreshToken.getUserId();
-        redisTemplate.opsForValue().set(key, refreshToken.getToken(), refreshTokenTtlSeconds, TimeUnit.SECONDS);
+        try {
+            redisTemplate.opsForValue().set(key, refreshToken.getToken(), refreshTokenTtlSeconds, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.error("[Redis Fail-Safe] Refresh Token 저장 실패 - UserId: {}, Reason: {}", refreshToken.getUserId(), e.getMessage());
+        }
     }
 
     @Override
     public Optional<RefreshToken> findByUserId(Long userId) {
         String key = PREFIX + userId;
-        String token = redisTemplate.opsForValue().get(key);
-        if (token == null) {
+        try {
+            String token = redisTemplate.opsForValue().get(key);
+            if (token == null) {
+                return Optional.empty();
+            }
+            return Optional.of(RefreshToken.create(userId, token));
+        } catch (Exception e) {
+            log.error("[Redis Fail-Safe] Refresh Token 조회 실패 - UserId: {}, Reason: {}", userId, e.getMessage());
             return Optional.empty();
         }
-        return Optional.of(RefreshToken.create(userId, token));
     }
 
     @Override
     public void deleteByUserId(Long userId) {
         String key = PREFIX + userId;
-        redisTemplate.delete(key);
+        try {
+            redisTemplate.delete(key);
+        } catch (Exception e) {
+            log.error("[Redis Fail-Safe] Refresh Token 삭제 실패 - UserId: {}, Reason: {}", userId, e.getMessage());
+        }
     }
 }
