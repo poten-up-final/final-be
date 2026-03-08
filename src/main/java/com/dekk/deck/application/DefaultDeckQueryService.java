@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class DeckQueryService {
+public class DefaultDeckQueryService {
 
     private final DeckRepository deckRepository;
     private final DeckCardRepository deckCardRepository;

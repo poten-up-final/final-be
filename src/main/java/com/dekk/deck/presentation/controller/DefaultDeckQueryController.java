@@ -2,7 +2,7 @@ package com.dekk.deck.presentation.controller;
 
 import com.dekk.common.response.ApiResponse;
 import com.dekk.common.response.PageResponse;
-import com.dekk.deck.application.DeckQueryService;
+import com.dekk.deck.application.DefaultDeckQueryService;
 import com.dekk.deck.application.dto.result.MyDeckCardResult;
 import com.dekk.deck.presentation.response.DeckResultCode;
 import com.dekk.security.oauth2.CustomUserDetails;
@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/w/v1/decks")
+@RequestMapping("/w/v1/decks/default")
 @RequiredArgsConstructor
-public class DeckQueryController implements DeckQueryApi {
+public class DefaultDeckQueryController implements DefaultDeckQueryApi {
 
-    private final DeckQueryService deckQueryService;
+    private final DefaultDeckQueryService deckQueryService;
 
     @Override
-    @GetMapping("/default/cards")
+    @GetMapping("/cards")
     public ResponseEntity<ApiResponse<PageResponse<MyDeckCardResult>>> getMyDefaultDeckCards(
         @AuthenticationPrincipal CustomUserDetails userDetails,
         @ParameterObject Pageable pageable

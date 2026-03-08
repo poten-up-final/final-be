@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-@Tag(name = "보관함 조회 API", description = "내 보관함 정보 및 카드 목록 조회 API")
-public interface DeckQueryApi {
+@Tag(name = "기본 보관함 조회 API", description = "기본 보관함 카드 목록 조회 API")
+public interface DefaultDeckQueryApi {
 
     @Operation(summary = "기본 보관함 카드 목록 페이징 조회")
     ResponseEntity<ApiResponse<PageResponse<MyDeckCardResult>>> getMyDefaultDeckCards(
