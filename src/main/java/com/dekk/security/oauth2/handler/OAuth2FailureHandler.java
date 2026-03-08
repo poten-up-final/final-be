@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,21 +32,21 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(redirectUri);
 
-        String message = exception.getMessage();
-        String errorCodePrefix = AuthErrorCode.DUPLICATE_EMAIL.code() + ":";
+        if (exception instanceof OAuth2AuthenticationException oAuthException) {
+            OAuth2Error error = oAuthException.getError();
 
-        if (message != null && message.startsWith(errorCodePrefix)) {
-            String existingProvider = "unknown";
-            String[] parts = message.split(":");
-
-            if (parts.length > 1 && !parts[1].trim().isEmpty()) {
-                existingProvider = parts[1].trim();
+            if (AuthErrorCode.DUPLICATE_EMAIL.code().equals(error.getErrorCode())) {
+                String provider = error.getDescription() != null ? error.getDescription() : "unknown";
+                builder.queryParam("error", AuthErrorCode.DUPLICATE_EMAIL.name())
+                        .queryParam("provider", provider);
+            } else {
+                builder.queryParam("error", error.getErrorCode());
             }
-
-            builder.queryParam("error", AuthErrorCode.DUPLICATE_EMAIL.name())
-                    .queryParam("provider", existingProvider);
         } else {
             builder.queryParam("error", exception.getLocalizedMessage());
         }
+
+        String targetUrl = builder.build().toUriString();
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }
