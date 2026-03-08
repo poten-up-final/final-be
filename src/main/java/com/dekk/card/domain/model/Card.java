@@ -5,7 +5,6 @@ import com.dekk.card.domain.exception.CardBusinessException;
 import com.dekk.card.domain.exception.CardErrorCode;
 import com.dekk.card.domain.model.enums.CardStatus;
 import com.dekk.card.domain.model.enums.Platform;
-import com.dekk.card.domain.model.enums.TargetGender;
 import com.dekk.common.entity.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -54,10 +53,6 @@ public class Card extends BaseTimeEntity {
     @Column(nullable = false)
     private Platform platform;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "target_gender")
-    private TargetGender targetGender;
-
     private Integer height;
 
     private Integer weight;
@@ -67,7 +62,6 @@ public class Card extends BaseTimeEntity {
             String tags,
             String originId,
             Platform platform,
-            TargetGender targetGender,
             Integer height,
             Integer weight
     ) {
@@ -76,7 +70,6 @@ public class Card extends BaseTimeEntity {
         this.originId = originId;
         this.status = CardStatus.PENDING;
         this.platform = platform;
-        this.targetGender = targetGender;
         this.height = height;
         this.weight = weight;
     }
@@ -93,7 +86,6 @@ public class Card extends BaseTimeEntity {
                 command.tags(),
                 command.originId(),
                 command.platform(),
-                command.targetGender(),
                 command.height(),
                 command.weight()
         );

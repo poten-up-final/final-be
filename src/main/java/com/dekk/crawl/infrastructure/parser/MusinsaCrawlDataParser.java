@@ -5,7 +5,7 @@ import com.dekk.card.application.command.CardImageCreateCommand;
 import com.dekk.card.application.command.ProductCreateCommand;
 import com.dekk.card.application.command.ProductImageCreateCommand;
 import com.dekk.card.domain.model.enums.Platform;
-import com.dekk.card.domain.model.enums.TargetGender;
+import com.dekk.card.domain.model.enums.ProductGender;
 import com.dekk.crawl.domain.parser.CrawlDataParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -58,7 +58,6 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
 
         CardImageCreateCommand cardImage = parseCardImage(snap);
         String tags = parseTags(snap);
-        TargetGender targetGender = parseGender(snap.path("model").path("gender"));
         Integer height = parseNullableInt(snap.path("model").path("height"));
         Integer weight = parseNullableInt(snap.path("model").path("weight"));
 
@@ -72,7 +71,6 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
                 tags,
                 originId,
                 Platform.MUSINSA,
-                targetGender,
                 height,
                 weight
         );
@@ -219,13 +217,13 @@ public class MusinsaCrawlDataParser implements CrawlDataParser {
         return products;
     }
 
-    private TargetGender parseGender(JsonNode genderNode) {
+    private ProductGender parseGender(JsonNode genderNode) {
         if (genderNode.isMissingNode() || genderNode.isNull()) {
             return null;
         }
 
         String value = genderNode.asText().toUpperCase();
-        return TargetGender.musinsaParse(value);
+        return ProductGender.musinsaParse(value);
     }
 
     private Integer parseNullableInt(JsonNode node) {
