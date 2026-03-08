@@ -28,4 +28,6 @@ public interface DeckCardJpaRepository extends JpaRepository<DeckCard, Long> {
     List<DeckCardCountProjection> countCardsByDeckIds(@Param("deckIds") List<Long> deckIds);
 
     long countByDeckId(Long deckId);
+
+    List<DeckCard> findAllByDeckIdIn(List<Long> deckIds);
 }

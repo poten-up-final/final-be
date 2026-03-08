@@ -24,4 +24,6 @@ public interface DeckCardRepository {
     Map<Long, Long> countCardsByDeckIds(List<Long> deckIds);
 
     long countByDeckId(Long deckId);
+
+    List<DeckCard> findAllByDeckIdIn(List<Long> deckIds);
 }
