@@ -3,7 +3,7 @@ package com.dekk.card.infrastructure.jpa;
 import com.dekk.card.domain.model.Card;
 import com.dekk.card.domain.model.enums.CardStatus;
 import com.dekk.card.domain.model.enums.Platform;
-import com.dekk.card.domain.model.enums.ProductGender;
+import com.dekk.card.domain.model.enums.TargetGender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,13 +32,13 @@ public interface CardJpaRepository extends JpaRepository<Card, Long> {
             "JOIN cp.product p " +
             "WHERE c.status = 'APPROVED' " +
             "AND p.isSimilar = false " +
-            "AND p.gender IN :genders " +
+            "AND c.targetGender IN :genders " +
             "AND (c.height IS NULL OR c.height BETWEEN :minHeight AND :maxHeight) " +
             "AND (c.weight IS NULL OR c.weight BETWEEN :minWeight AND :maxWeight) " +
             "AND (:excludedCardIds IS NULL OR c.id NOT IN :excludedCardIds)")
     List<Card> findRecommendCandidates(
             @Param("excludedCardIds") List<Long> excludedCardIds,
-            @Param("genders") List<ProductGender> genders,
+            @Param("genders") List<TargetGender> genders,
             @Param("minHeight") int minHeight,
             @Param("maxHeight") int maxHeight,
             @Param("minWeight") int minWeight,
