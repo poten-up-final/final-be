@@ -2,10 +2,12 @@ package com.dekk.security.oauth2.repository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,6 +16,12 @@ public class InMemoryOAuth2AuthorizationRequestRepository implements Authorizati
 
     private final Map<String, OAuth2AuthorizationRequest> authRequests = new ConcurrentHashMap<>();
     private final Map<String, String> redirectUris = new ConcurrentHashMap<>();
+    private final List<String> allowedOrigins;
+
+    public InMemoryOAuth2AuthorizationRequestRepository(
+            @Value("${app.cors.allowed-origins}") String allowedOrigins) {
+        this.allowedOrigins = List.of(allowedOrigins.split(","));
+    }
 
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
@@ -32,15 +40,20 @@ public class InMemoryOAuth2AuthorizationRequestRepository implements Authorizati
         authRequests.put(state, authorizationRequest);
 
         String redirectUri = request.getParameter("redirect_uri");
-        if (redirectUri != null && !redirectUri.isBlank()) {
+        if (redirectUri != null && !redirectUri.isBlank() && isAllowedOrigin(redirectUri)) {
             redirectUris.put(state, redirectUri);
         }
+    }
+
+    private boolean isAllowedOrigin(String uri) {
+        return allowedOrigins.stream().anyMatch(uri::startsWith);
     }
 
     @Override
     public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
         String state = request.getParameter("state");
         if (state != null) {
+            redirectUris.remove(state);
             return authRequests.remove(state);
         }
         return null;
@@ -48,7 +61,6 @@ public class InMemoryOAuth2AuthorizationRequestRepository implements Authorizati
 
     public String getRedirectUriAndRemove(String state) {
         if (state != null) {
-            authRequests.remove(state);
             return redirectUris.remove(state);
         }
         return null;
