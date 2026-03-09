@@ -30,4 +30,11 @@ public class CategoryCommandService {
         Category savedCategory = categoryRepository.save(child);
         return savedCategory.getId();
     }
+
+    public void updateCategoryName(Long categoryId, UpdateCategoryNameCommand command) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryBusinessException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+
+        category.updateName(command.name());
+    }
 }

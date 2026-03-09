@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "관리자 카테고리 관리 API", description = "관리자가 카테고리를 생성하고 조회하는 API")
+@Tag(name = "관리자 카테고리 관리 API", description = "관리자가 카테고리를 생성, 수정, 삭제하는 API")
 public interface CategoryCommandApi {
 
     @Operation(summary = "상위 카테고리 생성", description = "새로운 상위 카테고리를 생성합니다.")
@@ -86,4 +87,35 @@ public interface CategoryCommandApi {
             @Valid CreateCategoryRequest request
     );
 
+    @Operation(summary = "카테고리 이름 수정", description = "상위 또는 하위 카테고리의 이름을 수정합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "카테고리명 수정 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "SCT20011",
+                                      "message": "카테고리명 수정 성공"
+                                    }""")
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "카테고리를 찾을 수 없음",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "ECT40401",
+                                      "message": "카테고리를 찾을 수 없습니다"
+                                    }""")
+                    )
+            )
+    })
+    ResponseEntity<ApiResponse<Void>> updateCategoryName(
+            @Parameter(description = "카테고리 ID", in = ParameterIn.PATH) Long categoryId,
+            @Valid UpdateCategoryNameRequest request
+    );
 }
