@@ -33,16 +33,14 @@ public interface CardJpaRepository extends JpaRepository<Card, Long> {
 
     @Query("SELECT DISTINCT c FROM Card c " +
             "JOIN FETCH c.cardImage " +
-            "LEFT JOIN FETCH c.cardProducts cp " +
+            "JOIN FETCH c.cardProducts cp " +
             "LEFT JOIN FETCH cp.product p " +
             "LEFT JOIN FETCH p.productImage " +
             "WHERE c.status = 'APPROVED' " +
             "AND c.targetGender IN :genders " +
             "AND (c.height IS NULL OR c.height BETWEEN :minHeight AND :maxHeight) " +
-            "AND (c.weight IS NULL OR c.weight BETWEEN :minWeight AND :maxWeight) " +
-            "AND (:excludedCardIds IS NULL OR c.id NOT IN :excludedCardIds)")
+            "AND (c.weight IS NULL OR c.weight BETWEEN :minWeight AND :maxWeight)")
     List<Card> findRecommendCandidates(
-            @Param("excludedCardIds") List<Long> excludedCardIds,
             @Param("genders") List<TargetGender> genders,
             @Param("minHeight") int minHeight,
             @Param("maxHeight") int maxHeight,

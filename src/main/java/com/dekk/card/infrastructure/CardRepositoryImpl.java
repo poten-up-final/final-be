@@ -62,7 +62,6 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public List<Card> findRecommendCandidates(RecommendCandidateQuery query) {
         return cardJpaRepository.findRecommendCandidates(
-                query.excludedCardIdsOrNull(),
                 query.genders(),
                 query.minHeight(),
                 query.maxHeight(),
