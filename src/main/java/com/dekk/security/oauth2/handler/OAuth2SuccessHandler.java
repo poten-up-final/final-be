@@ -1,10 +1,11 @@
 package com.dekk.security.oauth2.handler;
 
+import com.dekk.auth.domain.model.RefreshToken;
+import com.dekk.auth.domain.repository.RefreshTokenRepository;
 import com.dekk.auth.jwt.JwtTokenProvider;
 import com.dekk.auth.presentation.util.CookieUtil;
 import com.dekk.security.oauth2.CustomUserDetails;
 import com.dekk.user.domain.model.enums.UserStatus;
-import com.dekk.user.domain.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ import java.io.IOException;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private final String defaultRedirectUri;
     private final String joinPageUri;
@@ -31,12 +33,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     public OAuth2SuccessHandler(
             JwtTokenProvider jwtTokenProvider,
+            RefreshTokenRepository refreshTokenRepository,
             @Value("${app.oauth2.redirect-uri}") String defaultRedirectUri,
             @Value("${app.oauth2.join-page}") String joinPageUri,
             @Value("${jwt.access-token-validity-in-seconds}") int accessTokenMaxAge,
             @Value("${jwt.refresh-token-validity-in-seconds}") int refreshTokenMaxAge) {
 
         this.jwtTokenProvider = jwtTokenProvider;
+        this.refreshTokenRepository = refreshTokenRepository;
         this.defaultRedirectUri = defaultRedirectUri;
         this.joinPageUri = joinPageUri;
         this.accessTokenMaxAge = accessTokenMaxAge;
@@ -48,12 +52,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
+
         CookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_NAME, accessToken, accessTokenMaxAge);
         CookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_NAME, refreshToken, refreshTokenMaxAge);
 
         String targetUrl = defaultRedirectUri;
 
         if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+
+            refreshTokenRepository.save(RefreshToken.create(userDetails.getId(), refreshToken));
+
             if (userDetails.getStatus() == UserStatus.PENDING) {
                 targetUrl = joinPageUri;
             }

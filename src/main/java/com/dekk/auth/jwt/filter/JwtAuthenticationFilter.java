@@ -1,5 +1,6 @@
 package com.dekk.auth.jwt.filter;
 
+import com.dekk.auth.domain.exception.AuthErrorCode;
 import com.dekk.auth.jwt.JwtTokenProvider;
 import com.dekk.auth.domain.exception.AuthBusinessException;
 import com.dekk.auth.presentation.util.CookieUtil;
@@ -25,9 +26,6 @@ import java.util.Arrays;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_PREFIX = "Bearer ";
-
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
 
@@ -43,6 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             if (jwtTokenProvider.validateToken(jwt)) {
+
+                if(!jwtTokenProvider.isAccessToken(jwt)) {
+                    throw new AuthBusinessException(AuthErrorCode.INVALID_TOKEN_TYPE);
+                }
+
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
