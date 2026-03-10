@@ -22,7 +22,6 @@ public interface DefaultDeckQueryApi {
     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공 (SDK20002)")
     @ApiErrorExceptions({DeckErrorCode.class})
     ResponseEntity<ApiResponse<PageResponse<MyDeckCardResult>>> getMyDefaultDeckCards(
-        @Parameter(hidden = true) CustomUserDetails userDetails,
-        @ParameterObject @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
-    );
+            @Parameter(hidden = true) CustomUserDetails userDetails,
+            @ParameterObject @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable);
 }

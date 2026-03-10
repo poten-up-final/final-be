@@ -30,7 +30,8 @@ public class AuthCommandService {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getId();
 
-        RefreshToken savedRefreshToken = refreshTokenRepository.findByUserId(userId)
+        RefreshToken savedRefreshToken = refreshTokenRepository
+                .findByUserId(userId)
                 .orElseThrow(() -> new AuthBusinessException(AuthErrorCode.INVALID_REFRESH_TOKEN));
 
         if (!savedRefreshToken.getToken().equals(command.refreshToken())) {

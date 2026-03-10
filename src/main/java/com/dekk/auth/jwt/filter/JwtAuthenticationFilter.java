@@ -1,8 +1,8 @@
 package com.dekk.auth.jwt.filter;
 
+import com.dekk.auth.domain.exception.AuthBusinessException;
 import com.dekk.auth.domain.exception.AuthErrorCode;
 import com.dekk.auth.jwt.JwtTokenProvider;
-import com.dekk.auth.domain.exception.AuthBusinessException;
 import com.dekk.auth.presentation.util.CookieUtil;
 import com.dekk.common.error.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +11,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -18,9 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
-import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Component
@@ -30,7 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         String jwt = resolveTokenFromCookie(request);
 
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             if (jwtTokenProvider.validateToken(jwt)) {
 
-                if(!jwtTokenProvider.isAccessToken(jwt)) {
+                if (!jwtTokenProvider.isAccessToken(jwt)) {
                     throw new AuthBusinessException(AuthErrorCode.INVALID_TOKEN_TYPE);
                 }
 
@@ -68,7 +68,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private void handleAuthenticationException(HttpServletResponse response, AuthBusinessException e) throws IOException {
+    private void handleAuthenticationException(HttpServletResponse response, AuthBusinessException e)
+            throws IOException {
         response.setStatus(e.errorCode().status().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

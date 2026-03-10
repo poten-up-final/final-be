@@ -30,17 +30,19 @@ public class AdminSecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
-        http
-                .securityMatcher("/adm/**")
+        http.securityMatcher("/adm/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/adm/auth/login").permitAll()
-                        .requestMatchers("/adm/admins/**").hasRole("SUPER_ADMIN")
-                        .anyRequest().hasAnyRole("SUPER_ADMIN", "ADMIN")
-                )
-                .addFilterBefore(new AdminJwtAuthenticationFilter(adminJwtTokenProvider, objectMapper), UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/adm/auth/login")
+                        .permitAll()
+                        .requestMatchers("/adm/admins/**")
+                        .hasRole("SUPER_ADMIN")
+                        .anyRequest()
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN"))
+                .addFilterBefore(
+                        new AdminJwtAuthenticationFilter(adminJwtTokenProvider, objectMapper),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

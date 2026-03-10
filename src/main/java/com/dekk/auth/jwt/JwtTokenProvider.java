@@ -12,18 +12,17 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
@@ -34,7 +33,6 @@ public class JwtTokenProvider {
     private static final String CLAIM_STATUS = "status";
     private static final String ACCESS_TOKEN_TYPE = "ACCESS";
     private static final String REFRESH_TOKEN_TYPE = "REFRESH";
-
 
     private final Key key;
     private final long accessTokenValidityTime;
@@ -99,9 +97,7 @@ public class JwtTokenProvider {
         String role = claims.get(AUTHORITIES_KEY).toString();
 
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(role.split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
+                Arrays.stream(role.split(",")).map(SimpleGrantedAuthority::new).toList();
 
         String email = claims.getSubject();
         Long userId = ((Number) claims.get(CLAIM_USER_ID)).longValue();

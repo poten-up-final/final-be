@@ -1,6 +1,5 @@
 package com.dekk.auth.domain.model;
 
-
 import com.dekk.auth.domain.exception.AuthBusinessException;
 import com.dekk.auth.domain.exception.AuthErrorCode;
 import lombok.AccessLevel;
@@ -20,7 +19,7 @@ public class RefreshToken {
     }
 
     public static RefreshToken create(Long userId, String token) {
-        if(userId == null || token == null || token.isBlank()) {
+        if (userId == null || token == null || token.isBlank()) {
             throw new AuthBusinessException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
         return new RefreshToken(userId, token);

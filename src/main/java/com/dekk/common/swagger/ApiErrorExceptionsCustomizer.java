@@ -18,8 +18,8 @@ public class ApiErrorExceptionsCustomizer implements OperationCustomizer {
 
     @Override
     public Operation customize(Operation operation, HandlerMethod handlerMethod) {
-        ApiErrorExceptions annotation = AnnotatedElementUtils.findMergedAnnotation(
-            handlerMethod.getMethod(), ApiErrorExceptions.class);
+        ApiErrorExceptions annotation =
+                AnnotatedElementUtils.findMergedAnnotation(handlerMethod.getMethod(), ApiErrorExceptions.class);
 
         if (annotation != null) {
             ApiResponses responses = operation.getResponses();
@@ -36,15 +36,14 @@ public class ApiErrorExceptionsCustomizer implements OperationCustomizer {
                     example.setValue(ErrorResponse.from(errorCode));
                     example.setDescription(errorCode.message());
 
-                    ApiResponse response = responses.computeIfAbsent(statusCode,
-                        k -> new ApiResponse().description("에러 응답"));
+                    ApiResponse response =
+                            responses.computeIfAbsent(statusCode, k -> new ApiResponse().description("에러 응답"));
 
                     if (response.getContent() == null) {
                         response.setContent(new Content().addMediaType("application/json", new MediaType()));
                     }
 
-                    response.getContent().get("application/json")
-                        .addExamples(errorCode.name(), example);
+                    response.getContent().get("application/json").addExamples(errorCode.name(), example);
                 }
             }
         }

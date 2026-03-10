@@ -2,14 +2,13 @@ package com.dekk.auth.infrastructure.redis;
 
 import com.dekk.auth.domain.model.RefreshToken;
 import com.dekk.auth.domain.repository.RefreshTokenRepository;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Repository
@@ -28,7 +27,10 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
         try {
             redisTemplate.opsForValue().set(key, refreshToken.getToken(), refreshTokenTtlSeconds, TimeUnit.SECONDS);
         } catch (Exception e) {
-            log.error("[Redis Fail-Safe] Refresh Token 저장 실패 - UserId: {}, Reason: {}", refreshToken.getUserId(), e.getMessage());
+            log.error(
+                    "[Redis Fail-Safe] Refresh Token 저장 실패 - UserId: {}, Reason: {}",
+                    refreshToken.getUserId(),
+                    e.getMessage());
         }
     }
 

@@ -19,8 +19,7 @@ public interface ActiveLogApi {
     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공 (SAL20001)")
     @ApiErrorExceptions({ActiveLogErrorCode.class})
     ResponseEntity<ApiResponse<Void>> swipeCard(
-        @Parameter(description = "대상 카드 ID", in = ParameterIn.PATH) Long cardId,
-        @RequestBody(description = "스와이프 요청 정보(LIKE/DISLIKE)") SwipeRequest request,
-        @Parameter(hidden = true) CustomUserDetails userDetails
-    );
+            @Parameter(description = "대상 카드 ID", in = ParameterIn.PATH) Long cardId,
+            @RequestBody(description = "스와이프 요청 정보(LIKE/DISLIKE)") SwipeRequest request,
+            @Parameter(hidden = true) CustomUserDetails userDetails);
 }

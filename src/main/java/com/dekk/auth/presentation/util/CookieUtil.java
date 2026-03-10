@@ -8,8 +8,7 @@ public class CookieUtil {
     public static final String ACCESS_TOKEN_NAME = "access_token";
     public static final String REFRESH_TOKEN_NAME = "refresh_token";
 
-    private CookieUtil() {
-    }
+    private CookieUtil() {}
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         ResponseCookie cookie = ResponseCookie.from(name, value)

@@ -4,11 +4,10 @@ import com.dekk.activelog.domain.model.ActiveLog;
 import com.dekk.activelog.domain.model.SwipeType;
 import com.dekk.activelog.domain.repository.ActiveLogRepository;
 import com.dekk.activelog.infrastructure.jpa.ActiveLogJpaRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor

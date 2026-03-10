@@ -2,13 +2,12 @@ package com.dekk.activelog.application;
 
 import com.dekk.activelog.domain.model.SwipeType;
 import com.dekk.activelog.domain.repository.ActiveLogRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

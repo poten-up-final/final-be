@@ -1,12 +1,11 @@
 package com.dekk.deck.domain.repository;
 
 import com.dekk.deck.domain.model.DeckCard;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface DeckCardRepository {
     DeckCard save(DeckCard deckCard);
