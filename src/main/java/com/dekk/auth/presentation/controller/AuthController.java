@@ -35,8 +35,7 @@ public class AuthController implements AuthApi {
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<Void>> refreshToken(
             @CookieValue(value = CookieUtil.REFRESH_TOKEN_NAME, required = false) String refreshToken,
-            HttpServletResponse response
-    ) {
+            HttpServletResponse response) {
         TokenRefreshResult result = authCommandService.refreshToken(new TokenRefreshCommand(refreshToken));
 
         CookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_NAME, result.accessToken(), accessTokenMaxAge);
