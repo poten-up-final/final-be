@@ -10,12 +10,10 @@ import com.dekk.deck.domain.model.Deck;
 import com.dekk.deck.domain.model.DeckCard;
 import com.dekk.deck.domain.repository.DeckCardRepository;
 import com.dekk.deck.domain.repository.DeckRepository;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +40,13 @@ public class CustomDeckQueryService {
 
         Map<Long, String> imageUrlMap = getLatestImageUrlMap(deckIds);
 
-
         return myCustomDecks.stream()
-            .map(deck ->
-                CustomDeckResult.of(deck.getId(), deck.getName(), cardCountMap.getOrDefault(deck.getId(), 0L), imageUrlMap.get(deck.getId())))
-            .toList();
+                .map(deck -> CustomDeckResult.of(
+                        deck.getId(),
+                        deck.getName(),
+                        cardCountMap.getOrDefault(deck.getId(), 0L),
+                        imageUrlMap.get(deck.getId())))
+                .toList();
     }
 
     private Map<Long, String> getLatestImageUrlMap(List<Long> deckIds) {
@@ -56,30 +56,27 @@ public class CustomDeckQueryService {
             return Map.of();
         }
 
-        List<Long> cardIds = latestCards.stream()
-            .map(DeckCard::getCardId)
-            .distinct()
-            .toList();
+        List<Long> cardIds =
+                latestCards.stream().map(DeckCard::getCardId).distinct().toList();
 
         List<MemberCardResult> cardResults = cardQueryService.getCardsByIds(cardIds);
 
         Map<Long, String> cardImageMap = cardResults.stream()
-            .filter(c -> c.cardImageUrl() != null)
-            .collect(Collectors.toMap(MemberCardResult::cardId, MemberCardResult::cardImageUrl));
+                .filter(c -> c.cardImageUrl() != null)
+                .collect(Collectors.toMap(MemberCardResult::cardId, MemberCardResult::cardImageUrl));
 
         return latestCards.stream()
-            .filter(deckCard -> cardImageMap.containsKey(deckCard.getCardId()))
-            .collect(Collectors.toMap(
-                DeckCard::getDeckId,
-                deckCard -> cardImageMap.get(deckCard.getCardId()),
-                (existing, replacement) -> existing
-            ));
+                .filter(deckCard -> cardImageMap.containsKey(deckCard.getCardId()))
+                .collect(Collectors.toMap(
+                        DeckCard::getDeckId,
+                        deckCard -> cardImageMap.get(deckCard.getCardId()),
+                        (existing, replacement) -> existing));
     }
 
     public List<MyDeckCardResult> getCustomDeckCards(Long userId, Long deckId) {
         Deck deck = deckRepository
-            .findByIdAndUserId(deckId, userId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+                .findByIdAndUserId(deckId, userId)
+                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
 
         List<DeckCard> deckCards = deckCardRepository.findAllByDeckIdOrderByCreatedAtDesc(deck.getId());
 
@@ -92,11 +89,11 @@ public class CustomDeckQueryService {
         List<MemberCardResult> cardResults = cardQueryService.getCardsByIds(cardIds);
 
         Map<Long, MemberCardResult> cardMap =
-            cardResults.stream().collect(Collectors.toMap(MemberCardResult::cardId, Function.identity()));
+                cardResults.stream().collect(Collectors.toMap(MemberCardResult::cardId, Function.identity()));
 
         return deckCards.stream()
-            .map(deckCard -> mapToMyDeckCardResult(deckCard, cardMap))
-            .toList();
+                .map(deckCard -> mapToMyDeckCardResult(deckCard, cardMap))
+                .toList();
     }
 
     private MyDeckCardResult mapToMyDeckCardResult(DeckCard deckCard, Map<Long, MemberCardResult> cardMap) {
@@ -111,15 +108,15 @@ public class CustomDeckQueryService {
 
     private MyDeckCardResult convertToMyDeckCardResult(MemberCardResult cardInfo) {
         List<MyDeckCardResult.ProductDetail> productDetails = cardInfo.products().stream()
-            .map(p -> new MyDeckCardResult.ProductDetail(p.brand(), p.productUrl(), p.name(), p.productImageUrl()))
-            .toList();
+                .map(p -> new MyDeckCardResult.ProductDetail(p.brand(), p.productUrl(), p.name(), p.productImageUrl()))
+                .toList();
 
         return new MyDeckCardResult(
-            cardInfo.cardId(),
-            cardInfo.cardImageUrl(),
-            cardInfo.height(),
-            cardInfo.weight(),
-            cardInfo.tags(),
-            productDetails);
+                cardInfo.cardId(),
+                cardInfo.cardImageUrl(),
+                cardInfo.height(),
+                cardInfo.weight(),
+                cardInfo.tags(),
+                productDetails);
     }
 }
