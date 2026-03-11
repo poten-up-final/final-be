@@ -1,6 +1,5 @@
 package com.dekk.admin.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AdminSecurityConfig {
 
     private final AdminJwtTokenProvider adminJwtTokenProvider;
-    private final ObjectMapper objectMapper;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -29,19 +29,17 @@ public class AdminSecurityConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/adm/**")
+    public SecurityFilterChain adminFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
+        http.securityMatcher("/adm/v1/**")
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/adm/auth/login")
-                        .permitAll()
-                        .requestMatchers("/adm/admins/**")
-                        .hasRole("SUPER_ADMIN")
-                        .anyRequest()
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN"))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/adm/v1/auth/login").permitAll()
+                        .requestMatchers("/adm/v1/admins/**").hasRole("SUPER_ADMIN")
+                        .anyRequest().hasAnyRole("SUPER_ADMIN", "ADMIN"))
                 .addFilterBefore(
-                        new AdminJwtAuthenticationFilter(adminJwtTokenProvider, objectMapper),
+                        new AdminJwtAuthenticationFilter(adminJwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
