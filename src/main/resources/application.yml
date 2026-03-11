@@ -1,6 +1,6 @@
 spring:
   application:
-    name: DEKK
+    name: dekk-was-server
   profiles:
     active: dev
 
