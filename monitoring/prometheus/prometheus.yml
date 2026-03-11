@@ -10,7 +10,7 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scrape_interval: 10s
     static_configs:
-      - targets: ['host.docker.internal:8080']
+      - targets: ['host.docker.internal:8081']
         labels:
           application: 'dekk-was-server'
           environment: 'dev'
