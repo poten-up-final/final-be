@@ -71,6 +71,7 @@ volumes:
   postgres_data:
   redis_data:
   prometheus-data:
+  loki-data:
   grafana-data:
 
 networks:
