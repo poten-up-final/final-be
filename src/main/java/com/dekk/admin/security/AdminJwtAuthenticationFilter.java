@@ -42,8 +42,7 @@ public class AdminJwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String token = resolveTokenFromCookie(request);
-
-            if (StringUtils.hasText(token)) {
+            if (!StringUtils.hasText(token)) {
                 filterChain.doFilter(request, response);
                 return;
             }
