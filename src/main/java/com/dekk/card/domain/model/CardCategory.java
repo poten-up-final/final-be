@@ -1,7 +1,7 @@
-package com.dekk.category.domain.model;
+package com.dekk.card.domain.model;
 
-import com.dekk.category.domain.exception.CategoryBusinessException;
-import com.dekk.category.domain.exception.CategoryErrorCode;
+import com.dekk.card.domain.exception.CardBusinessException;
+import com.dekk.card.domain.exception.CardErrorCode;
 import com.dekk.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,10 +40,10 @@ public class CardCategory extends BaseTimeEntity {
 
     public static CardCategory create(Long cardId, Long categoryId) {
         if (cardId == null) {
-            throw new CategoryBusinessException(CategoryErrorCode.CARD_ID_IS_REQUIRED);
+            throw new CardBusinessException(CardErrorCode.CARD_ID_IS_REQUIRED);
         }
         if (categoryId == null) {
-            throw new CategoryBusinessException(CategoryErrorCode.CATEGORY_ID_IS_REQUIRED);
+            throw new CardBusinessException(CardErrorCode.CATEGORY_ID_IS_REQUIRED);
         }
         return new CardCategory(cardId, categoryId);
     }

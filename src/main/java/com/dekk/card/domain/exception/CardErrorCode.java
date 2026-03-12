@@ -13,6 +13,9 @@ public enum CardErrorCode implements ErrorCode {
     CARD_ORIGIN_ID_IS_REQUIRED_TO_CREATE(HttpStatus.BAD_REQUEST, "EC40007", "카드 고유 id는 필수 값입니다"),
     CARD_PLATFORM_IS_REQUIRED_TO_CREATE(HttpStatus.BAD_REQUEST, "EC40008", "카드 플랫폼은 필수 값입니다"),
     CANNOT_CHANGE_STATUS_OF_DELETE_REQUESTED(HttpStatus.BAD_REQUEST, "EC40009", "삭제 요청된 카드의 상태는 변경할 수 없습니다"),
+    CARD_ALREADY_IN_CATEGORY(HttpStatus.BAD_REQUEST, "EC40010", "이미 해당 카테고리에 포함된 카드입니다"),
+    CARD_ID_IS_REQUIRED(HttpStatus.BAD_REQUEST, "EC40011", "카드 ID는 필수값입니다"),
+    CATEGORY_ID_IS_REQUIRED(HttpStatus.BAD_REQUEST, "EC40012", "카테고리 ID는 필수값입니다"),
 
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "EC40401", "카드를 찾을 수 없습니다"),
     ;

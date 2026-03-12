@@ -5,7 +5,7 @@ import com.dekk.category.application.command.UpdateCategoryNameCommand;
 import com.dekk.category.domain.exception.CategoryBusinessException;
 import com.dekk.category.domain.exception.CategoryErrorCode;
 import com.dekk.category.domain.model.Category;
-import com.dekk.category.domain.repository.CardCategoryRepository;
+import com.dekk.card.domain.repository.CardCategoryRepository;
 import com.dekk.category.domain.repository.CategoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
