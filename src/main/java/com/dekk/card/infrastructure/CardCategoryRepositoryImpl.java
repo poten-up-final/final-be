@@ -1,7 +1,7 @@
-package com.dekk.category.infrastructure;
+package com.dekk.card.infrastructure;
 
-import com.dekk.category.domain.repository.CardCategoryRepository;
-import com.dekk.category.infrastructure.jpa.CardCategoryJpaRepository;
+import com.dekk.card.domain.repository.CardCategoryRepository;
+import com.dekk.card.infrastructure.jpa.CardCategoryJpaRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
