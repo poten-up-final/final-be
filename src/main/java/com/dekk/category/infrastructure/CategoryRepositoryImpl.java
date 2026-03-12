@@ -40,7 +40,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public long countByIdIn(List<Long> ids) {
-        return categoryJpaRepository.countByIdIn(ids);
+    public long countChildCategoryByIdIn(List<Long> ids) {
+        return categoryJpaRepository.countByIdInAndDepth(ids, 1);
     }
 }

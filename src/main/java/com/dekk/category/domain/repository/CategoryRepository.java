@@ -15,5 +15,5 @@ public interface CategoryRepository {
 
     void softDeleteAllByParentId(Long parentId);
 
-    long countByIdIn(List<Long> ids);
+    long countChildCategoryByIdIn(List<Long> ids);
 }

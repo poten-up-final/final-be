@@ -20,7 +20,7 @@ public class CategoryQueryService {
                 .toList();
     }
 
-    public long countByIds(List<Long> categoryIds) {
-        return categoryRepository.countByIdIn(categoryIds);
+    public long countChildCategoryByIds(List<Long> categoryIds) {
+        return categoryRepository.countChildCategoryByIdIn(categoryIds);
     }
 }

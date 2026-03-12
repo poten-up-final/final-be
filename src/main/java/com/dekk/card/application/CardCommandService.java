@@ -57,7 +57,7 @@ public class CardCommandService {
     }
 
     private void validateCategoryIds(Set<Long> categoryIds) {
-        long count = categoryQueryService.countByIds(List.copyOf(categoryIds));
+        long count = categoryQueryService.countChildCategoryByIds(List.copyOf(categoryIds));
         if (count != categoryIds.size()) {
             throw new CardBusinessException(CardErrorCode.CATEGORY_NOT_FOUND);
         }

@@ -19,5 +19,5 @@ public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
             "UPDATE Category c SET c.deletedAt = CURRENT_TIMESTAMP WHERE c.parent.id = :parentId AND c.deletedAt IS NULL")
     void softDeleteAllByParentId(@Param("parentId") Long parentId);
 
-    long countByIdIn(List<Long> ids);
+    long countByIdInAndDepth(List<Long> ids, int depth);
 }
