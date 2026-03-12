@@ -19,4 +19,8 @@ public class CategoryQueryService {
                 .map(CategoryListResult::from)
                 .toList();
     }
+
+    public long countByIds(List<Long> categoryIds) {
+        return categoryRepository.countByIdIn(categoryIds);
+    }
 }
