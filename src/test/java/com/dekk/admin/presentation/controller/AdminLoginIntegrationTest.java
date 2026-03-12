@@ -73,7 +73,7 @@ class AdminLoginIntegrationTest {
     @DisplayName("관리자 로그인 통합 테스트 - 비밀번호 불일치")
     void admin_login_integration_invalid_password() throws Exception {
         // given
-        AdminLoginRequest request = new AdminLoginRequest(ADMIN_EMAIL, "Wrong123!");
+        AdminLoginRequest request = new AdminLoginRequest(ADMIN_EMAIL, "WrongPassword123!");
 
         // when & then
         mockMvc.perform(post("/adm/v1/auth/login")
@@ -81,6 +81,6 @@ class AdminLoginIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("EADM40101")); // INVALID_PASSWORD
+                .andExpect(jsonPath("$.code").value("EAD40101"));
     }
 }
