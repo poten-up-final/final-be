@@ -38,4 +38,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public void softDeleteAllByParentId(Long parentId) {
         categoryJpaRepository.softDeleteAllByParentId(parentId);
     }
+
+    @Override
+    public long countByIdIn(List<Long> ids) {
+        return categoryJpaRepository.countByIdIn(ids);
+    }
 }
