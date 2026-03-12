@@ -22,6 +22,8 @@ public class RecommendScoringService {
             return MAX_SCORE;
         }
         double diff = Math.abs(userValue - cardValue);
-        return Math.max(MIN_SCORE, MAX_SCORE - diff / range);
+        double rawScore = MAX_SCORE - diff / range;
+
+        return Math.max(MIN_SCORE, rawScore);
     }
 }
