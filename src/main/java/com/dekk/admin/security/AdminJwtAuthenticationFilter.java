@@ -30,9 +30,9 @@ public class AdminJwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
 
-       if (!path.startsWith("/adm/")) {
-           return true;
-       }
+        if (!path.startsWith("/adm/")) {
+            return true;
+        }
         return path.matches("^/adm/v\\d+/auth/login$");
     }
 
