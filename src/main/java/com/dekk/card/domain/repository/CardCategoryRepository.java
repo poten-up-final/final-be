@@ -1,4 +1,4 @@
-package com.dekk.category.domain.repository;
+package com.dekk.card.domain.repository;
 
 import java.util.List;
 
