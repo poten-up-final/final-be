@@ -21,7 +21,7 @@ public interface AdminCardQueryApi {
     ResponseEntity<ApiResponse<PageResponse<AdminCardResponse>>> getAdminCards(
             @Parameter(description = "페이지 번호 (0부터 시작)", example = "0") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "페이지 크기", example = "20") @RequestParam(defaultValue = "20") int size,
-            @Parameter(description = "정렬 방향 (ASC: 오래된순, DESC: 최신순)", example = "DESC")
+            @Parameter(description = "생성일 정렬 방향 (ASC: 오래된순, DESC: 최신순)", example = "DESC")
                     @RequestParam(defaultValue = "DESC")
                     String sort,
             @Parameter(description = "카드 상태 필터") @RequestParam(required = false) CardStatus status,
