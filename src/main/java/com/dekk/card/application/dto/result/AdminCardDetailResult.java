@@ -46,9 +46,8 @@ public record AdminCardDetailResult(
             ProductImageDetail productImage) {
 
         public static ProductDetail from(Product product) {
-            ProductImageDetail imageDetail = product.getProductImage() != null
-                    ? ProductImageDetail.from(product.getProductImage())
-                    : null;
+            ProductImageDetail imageDetail =
+                    product.getProductImage() != null ? ProductImageDetail.from(product.getProductImage()) : null;
             return new ProductDetail(
                     product.getId(),
                     product.getBrand(),
@@ -64,7 +63,8 @@ public record AdminCardDetailResult(
 
     public record ProductImageDetail(Long imageId, String originUrl, String imageUrl) {
         public static ProductImageDetail from(com.dekk.card.domain.model.ProductImage productImage) {
-            return new ProductImageDetail(productImage.getId(), productImage.getOriginUrl(), productImage.getImageUrl());
+            return new ProductImageDetail(
+                    productImage.getId(), productImage.getOriginUrl(), productImage.getImageUrl());
         }
     }
 

@@ -17,7 +17,10 @@ public record AdminCardDetailResponse(
         @Schema(description = "타겟 성별", example = "MEN") TargetGender targetGender,
         @Schema(description = "키(cm)", example = "175") Integer height,
         @Schema(description = "몸무게(kg)", example = "65") Integer weight,
-        @Schema(description = "태그 목록", example = "[\"캐주얼\", \"스트릿\"]") List<String> tags,
+
+        @Schema(description = "태그 목록", example = "[\"캐주얼\", \"스트릿\"]")
+        List<String> tags,
+
         @Schema(description = "카드 이미지") CardImageResponse cardImage,
         @Schema(description = "상품 목록") List<ProductResponse> products,
         @Schema(description = "카테고리 목록") List<CategoryResponse> categories,
@@ -39,7 +42,10 @@ public record AdminCardDetailResponse(
     public record ProductResponse(
             @Schema(description = "상품 ID", example = "10") Long productId,
             @Schema(description = "브랜드", example = "Nike") String brand,
-            @Schema(description = "상품명", example = "에어맥스 90") String name,
+
+            @Schema(description = "상품명", example = "에어맥스 90")
+            String name,
+
             @Schema(description = "가격", example = "129000") Integer price,
             @Schema(description = "옵션", example = "L") String option,
             @Schema(description = "유사 상품 여부") boolean isSimilar,
@@ -48,9 +54,8 @@ public record AdminCardDetailResponse(
             @Schema(description = "상품 이미지") ProductImageResponse productImage) {
 
         public static ProductResponse from(AdminCardDetailResult.ProductDetail detail) {
-            ProductImageResponse imageResponse = detail.productImage() != null
-                    ? ProductImageResponse.from(detail.productImage())
-                    : null;
+            ProductImageResponse imageResponse =
+                    detail.productImage() != null ? ProductImageResponse.from(detail.productImage()) : null;
             return new ProductResponse(
                     detail.productId(),
                     detail.brand(),

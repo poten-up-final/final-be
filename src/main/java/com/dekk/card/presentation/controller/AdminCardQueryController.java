@@ -59,8 +59,7 @@ public class AdminCardQueryController implements AdminCardQueryApi {
     @Override
     @GetMapping("/{cardId}")
     public ResponseEntity<ApiResponse<AdminCardDetailResponse>> getAdminCardDetail(@PathVariable Long cardId) {
-        AdminCardDetailResponse response =
-                AdminCardDetailResponse.from(cardQueryService.getCardDetailForAdmin(cardId));
+        AdminCardDetailResponse response = AdminCardDetailResponse.from(cardQueryService.getCardDetailForAdmin(cardId));
         return ResponseEntity.ok(ApiResponse.of(CardResultCode.ADMIN_CARD_DETAIL_SUCCESS, response));
     }
 }
