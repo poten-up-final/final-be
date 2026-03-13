@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "커스텀 보관함 관리 API", description = "커스텀 보관함 생성, 수정, 삭제 및 내부 카드 관리 API")
 public interface CustomDeckCommandApi {
 
-    @Operation(summary = "커스텀 보관함 생성", description = "새로운 커스텀 보관함을 생성합니다. (최대 8개)")
+    @Operation(summary = "커스텀 보관함 생성", description = "새로운 커스텀 보관함을 생성합니다. (기본 보관함/쉐어덱 포함 총 9개까지만 참여/생성 가능)")
     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공 (SD20005)")
     @ApiErrorExceptions({DeckErrorCode.class})
     ResponseEntity<ApiResponse<Void>> createCustomDeck(
