@@ -35,7 +35,7 @@ public class CardCommandService {
     }
 
     public void assignCategories(Long cardId, AssignCategoriesCommand command) {
-        findCardOrThrow(cardId);
+        validateCardExists(cardId);
 
         Set<Long> requestedIds = Set.copyOf(command.categoryIds());
         validateCategoryIds(requestedIds);
@@ -60,6 +60,12 @@ public class CardCommandService {
         long count = categoryQueryService.countChildCategoryByIds(List.copyOf(categoryIds));
         if (count != categoryIds.size()) {
             throw new CardBusinessException(CardErrorCode.CATEGORY_NOT_FOUND);
+        }
+    }
+
+    private void validateCardExists(Long cardId) {
+        if (!cardRepository.existsById(cardId)) {
+            throw new CardBusinessException(CardErrorCode.CARD_NOT_FOUND);
         }
     }
 
