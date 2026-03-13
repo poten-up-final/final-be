@@ -66,7 +66,7 @@ public class AdminJwtAuthenticationFilter extends OncePerRequestFilter {
         }
         return Arrays.stream(cookies)
                 .filter(cookie -> ADMIN_TOKEN_COOKIE_NAME.equals(cookie.getName()))
-                .map((Cookie::getValue))
+                .map(Cookie::getValue)
                 .findFirst()
                 .orElse(null);
     }
