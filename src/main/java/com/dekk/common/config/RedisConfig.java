@@ -1,5 +1,8 @@
-package com.dekk.security.config;
+package com.dekk.common.config;
 
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,14 +23,20 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
+    @Value("${spring.data.redis.ssl.enabled}")
+    private boolean sslEnabled;
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration serverConfig = new RedisStandaloneConfiguration(host, port);
 
-        LettuceClientConfiguration clientConfig =
-                LettuceClientConfiguration.builder().useSsl().build();
+        LettuceClientConfiguration.LettuceClientConfigurationBuilder builder = LettuceClientConfiguration.builder();
 
-        return new LettuceConnectionFactory(serverConfig, clientConfig);
+        if (sslEnabled) {
+            builder.useSsl();
+        }
+
+        return new LettuceConnectionFactory(serverConfig, builder.build());
     }
 
     @Bean
@@ -38,5 +47,14 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
+    }
+
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        String prefix = sslEnabled ? "rediss://" : "redis://";
+        config.useSingleServer().setAddress(prefix + host + ":" + port);
+
+        return Redisson.create(config);
     }
 }

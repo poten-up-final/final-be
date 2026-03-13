@@ -49,12 +49,11 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs",
+                                "/actuator/**",
                                 "/i/v1/crawl/**",
                                 "/w/v1/cards",
                                 "/w/v1/auth/refresh")
                         .permitAll()
-                        .requestMatchers("/adm/v1/cards/**", "/adm/v1/categories/**")
-                        .hasRole("ADMIN")
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oauth2 -> oauth2.loginPage(loginPageUrl)

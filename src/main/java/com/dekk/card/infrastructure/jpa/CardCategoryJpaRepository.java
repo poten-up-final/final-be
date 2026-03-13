@@ -1,6 +1,6 @@
-package com.dekk.category.infrastructure.jpa;
+package com.dekk.card.infrastructure.jpa;
 
-import com.dekk.category.domain.model.CardCategory;
+import com.dekk.card.domain.model.CardCategory;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,4 +18,14 @@ public interface CardCategoryJpaRepository extends JpaRepository<CardCategory, L
     @Query(
             "UPDATE CardCategory cc SET cc.deletedAt = CURRENT_TIMESTAMP WHERE cc.categoryId IN :categoryIds AND cc.deletedAt IS NULL")
     void softDeleteAllByCategoryIdIn(@Param("categoryIds") List<Long> categoryIds);
+
+    @Modifying(clearAutomatically = true)
+    @Query(
+            "UPDATE CardCategory cc SET cc.deletedAt = CURRENT_TIMESTAMP WHERE cc.cardId = :cardId AND cc.categoryId IN :categoryIds AND cc.deletedAt IS NULL")
+    void softDeleteByCardIdAndCategoryIdIn(@Param("cardId") Long cardId, @Param("categoryIds") List<Long> categoryIds);
+
+    List<CardCategory> findAllByCardId(Long cardId);
+
+    @Query("SELECT cc.categoryId FROM CardCategory cc WHERE cc.cardId IN :cardIds")
+    List<Long> findCategoryIdsByCardIdIn(@Param("cardIds") List<Long> cardIds);
 }
