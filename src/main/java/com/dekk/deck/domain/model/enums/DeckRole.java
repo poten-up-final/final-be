@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum DeckType {
-    DEFAULT("기본 보관함"),
-    CUSTOM("커스텀 보관함"),
-    SHARED("쉐어덱");
+public enum DeckRole {
+    HOST("호스트"),
+    GUEST("게스트");
 
     private final String description;
 }
