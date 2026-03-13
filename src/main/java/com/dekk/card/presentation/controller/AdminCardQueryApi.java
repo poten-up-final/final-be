@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,5 +31,7 @@ public interface AdminCardQueryApi {
             @Parameter(description = "조회 시작일 (yyyy-MM-dd)", example = "2026-01-01") @RequestParam(required = false)
                     LocalDate startDate,
             @Parameter(description = "조회 종료일 (yyyy-MM-dd)", example = "2026-12-31") @RequestParam(required = false)
-                    LocalDate endDate);
+                    LocalDate endDate,
+            @Parameter(description = "하위 카테고리 ID 목록 (AND 조건)") @RequestParam(required = false)
+                    List<Long> categoryIds);
 }
