@@ -30,7 +30,7 @@ public class DefaultDeckQueryService {
 
     public Page<MyDeckCardResult> getMyDefaultDeckCards(Long userId, Pageable pageable) {
         Deck defaultDeck = deckRepository
-                .findByUserIdAndIsDefaultTrue(userId)
+                .findDefaultDeckByUserId(userId)
                 .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_NOT_FOUND));
 
         Page<DeckCard> deckCards = deckCardRepository.findAllByDeckId(defaultDeck.getId(), pageable);
