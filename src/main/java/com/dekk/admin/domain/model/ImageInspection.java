@@ -1,5 +1,7 @@
 package com.dekk.admin.domain.model;
 
+import com.dekk.admin.domain.exception.AdminBusinessException;
+import com.dekk.admin.domain.exception.AdminErrorCode;
 import com.dekk.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,6 +58,9 @@ public class ImageInspection extends BaseTimeEntity {
     }
 
     public void updateAiResult(InspectionStatus status, String aiComment) {
+        if (this.status != InspectionStatus.PENDING && this.status != InspectionStatus.WORKER_ERROR) {
+            throw new AdminBusinessException(AdminErrorCode.INVALID_INSPECTION_STATUS_TRANSITION);
+        }
         this.status = status;
         this.aiComment = aiComment;
     }
