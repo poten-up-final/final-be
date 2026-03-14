@@ -3,6 +3,7 @@ package com.dekk.card.infrastructure.jpa;
 import com.dekk.card.application.dto.query.AdminCardSearchQuery;
 import com.dekk.card.domain.model.Card;
 import com.dekk.card.domain.model.CardCategory;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
@@ -16,6 +17,10 @@ public final class CardSpecification {
 
     public static Specification<Card> searchByCondition(AdminCardSearchQuery condition) {
         return (root, query, cb) -> {
+            if (Long.class != query.getResultType()) {
+                root.fetch("cardImage", JoinType.LEFT);
+            }
+
             List<Predicate> predicates = new ArrayList<>();
 
             if (condition.cardId() != null) {

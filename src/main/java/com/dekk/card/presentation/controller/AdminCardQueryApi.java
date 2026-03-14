@@ -34,8 +34,7 @@ public interface AdminCardQueryApi {
                     LocalDate startDate,
             @Parameter(description = "조회 종료일 (yyyy-MM-dd)", example = "2026-12-31") @RequestParam(required = false)
                     LocalDate endDate,
-            @Parameter(description = "하위 카테고리 ID 목록 (AND 조건)") @RequestParam(required = false)
-                    List<Long> categoryIds);
+            @Parameter(description = "하위 카테고리 ID 목록 (AND 조건)") @RequestParam(required = false) List<Long> categoryIds);
 
     @Operation(summary = "관리자 카드 상세 조회", description = "관리자가 카드의 상세 정보를 조회합니다. 카드 이미지, 상품, 상품 이미지, 카테고리 정보를 포함합니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "관리자 카드 상세 조회 성공")
