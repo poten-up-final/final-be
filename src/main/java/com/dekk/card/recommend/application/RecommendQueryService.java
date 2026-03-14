@@ -11,6 +11,7 @@ import com.dekk.user.application.UserQueryService;
 import com.dekk.user.application.dto.result.UserInfoResult;
 import com.dekk.user.domain.model.enums.Gender;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,22 @@ public class RecommendQueryService {
     private final UserQueryService userQueryService;
     private final ActiveLogQueryService activeLogQueryService;
     private final CardCategoryQueryService cardCategoryQueryService;
+    private final RecommendScoringService recommendScoringService;
 
     public List<MemberCardResult> getRecommendCandidates(Long userId) {
         UserInfoResult userInfo = userQueryService.getMyInfo(userId);
-        List<MemberCardResult> candidates = fetchCandidates(userInfo);
-        return excludeSwiped(candidates, userId);
+
+        List<MemberCardResult> candidates = excludeSwiped(fetchCandidates(userInfo), userId);
+
+        List<Long> likedCategoryIds = getLikedCategoryIds(userId);
+        Map<Long, Double> preferences = recommendScoringService.calculateCategoryPreferenceRatios(likedCategoryIds);
+
+        List<Long> candidateCardIds =
+                candidates.stream().map(MemberCardResult::cardId).toList();
+        Map<Long, List<Long>> cardCategoryMap = cardCategoryQueryService.getCardCategoryMap(candidateCardIds);
+
+        return recommendScoringService.rank(
+                userInfo.height(), userInfo.weight(), candidates, cardCategoryMap, preferences);
     }
 
     private List<MemberCardResult> fetchCandidates(UserInfoResult userInfo) {
@@ -41,9 +53,11 @@ public class RecommendQueryService {
                 .toList();
     }
 
-    public List<Long> getLikedCategoryIds(Long userId) {
+    private List<Long> getLikedCategoryIds(Long userId) {
         List<Long> likedCardIds = activeLogQueryService.getSwipedCardIds(userId, SwipeType.LIKE);
-        return cardCategoryQueryService.getCategoryIdsByCardIds(likedCardIds);
+        return cardCategoryQueryService.getCardCategoryMap(likedCardIds).values().stream()
+                .flatMap(List::stream)
+                .toList();
     }
 
     private List<MemberCardResult> excludeSwiped(List<MemberCardResult> candidates, Long userId) {
