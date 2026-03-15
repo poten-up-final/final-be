@@ -109,10 +109,13 @@ public class ShareDeckCommandService {
 
     private ShareTokenResult getOrCreateShareToken(Long deckId) {
         Optional<String> existingToken = deckInviteRedisRepository.getTokenByDeckId(deckId);
-        long remainingSeconds = deckInviteRedisRepository.getRemainingSeconds(deckId);
 
-        if (existingToken.isPresent() && remainingSeconds > OVERLAP_THRESHOLD_SECONDS) {
-            return new ShareTokenResult(existingToken.get(), remainingSeconds);
+        if (existingToken.isPresent()) {
+            long remainingSeconds = deckInviteRedisRepository.getRemainingSeconds(deckId);
+
+            if (remainingSeconds > OVERLAP_THRESHOLD_SECONDS) {
+                return new ShareTokenResult(existingToken.get(), remainingSeconds);
+            }
         }
 
         String newToken = UUID.randomUUID().toString().replace("-", "");
