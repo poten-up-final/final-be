@@ -17,9 +17,16 @@ public enum DeckErrorCode implements ErrorCode {
     DECK_ROLE_IS_REQUIRED(HttpStatus.BAD_REQUEST, "ED40009", "보관함 권한 역할은 필수값입니다"),
     DECK_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "ED40010", "보관함은 최대 9개까지 참여 및 생성할 수 있습니다"),
 
+    SHARE_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ED40101", "유효하지 않거나 만료된 초대 링크입니다"),
+
+    DECK_IS_NOT_SHARED(HttpStatus.FORBIDDEN, "ED40301", "현재 공유 중인 보관함이 아닙니다"),
+    GUEST_CANNOT_GENERATE_TOKEN(HttpStatus.FORBIDDEN, "ED40302", "초대 링크는 보관함의 호스트만 발급할 수 있습니다"),
+
     DEFAULT_DECK_NOT_FOUND(HttpStatus.NOT_FOUND, "ED40401", "기본 보관함을 찾을 수 없습니다"),
     CARD_NOT_FOUND_IN_DECK(HttpStatus.NOT_FOUND, "ED40402", "보관함에 해당 카드가 존재하지 않습니다"),
     CUSTOM_DECK_NOT_FOUND(HttpStatus.NOT_FOUND, "ED40403", "커스텀 보관함을 찾을 수 없습니다"),
+
+    ALREADY_JOINED_DECK(HttpStatus.CONFLICT, "ED40901", "이미 참여 중인 보관함입니다"),
     ;
 
     private final HttpStatus httpStatus;
