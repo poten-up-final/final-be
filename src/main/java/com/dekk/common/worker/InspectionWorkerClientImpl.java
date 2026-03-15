@@ -1,6 +1,6 @@
 package com.dekk.common.worker;
 
-import com.dekk.common.worker.dto.ProductImageInspectionPayload;
+import com.dekk.common.worker.dto.CardImageInspectionPayload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,21 +21,17 @@ public class InspectionWorkerClientImpl implements InspectionWorkerClient {
 
     @Async("workerTaskExecutor")
     @Override
-    public void sendInspectionRequest(Long productImageId, String originUrl, String imageUrl) {
-        log.info("[Inspection Worker] n8n 검수 요청 시작 - productImageId: {}", productImageId);
-        ProductImageInspectionPayload payload = new ProductImageInspectionPayload(productImageId, originUrl, imageUrl);
+    public void sendInspectionRequest(Long cardImageId, String originUrl, String imageUrl) {
+        log.info("[Inspection Worker] n8n 검수 요청 시작 - cardImageId: {}", cardImageId);
+        CardImageInspectionPayload payload = new CardImageInspectionPayload(cardImageId, originUrl, imageUrl);
 
         try {
             restTemplate.postForEntity(webhookUrl, payload, Void.class);
-            log.info("[Inspection Worker] n8n 검수 요청 성공 - productImageId: {}", productImageId);
+            log.info("[Inspection Worker] n8n 검수 요청 성공 - cardImageId: {}", cardImageId);
         } catch (Exception e) {
-            log.error(
-                    "[Inspection Worker] n8n 연동 실패 - productImageId: {}, Reason: {}",
-                    productImageId,
-                    e.getMessage(),
-                    e);
+            log.error("[Inspection Worker] n8n 연동 실패 - cardImageId: {}, Reason: {}", cardImageId, e.getMessage(), e);
 
-            fallbackHandler.handleFailure(productImageId);
+            fallbackHandler.handleFailure(cardImageId);
         }
     }
 }

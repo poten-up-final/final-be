@@ -1,5 +1,5 @@
 package com.dekk.common.worker;
 
 public interface InspectionWorkerClient {
-    void sendInspectionRequest(Long productImageId, String originUrl, String imageUrl);
+    void sendInspectionRequest(Long cardImageId, String originUrl, String imageUrl);
 }

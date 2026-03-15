@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(
         name = "image_inspections",
         indexes = {
-            @Index(name = "idx_image_inspections_product_image", columnList = "productImageId"),
+            @Index(name = "idx_image_inspections_card_image", columnList = "cardImageId"),
             @Index(name = "idx_image_inspections_status", columnList = "status")
         })
 @Getter
@@ -32,7 +32,7 @@ public class ImageInspection extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long productImageId;
+    private Long cardImageId;
 
     @Column(nullable = false, columnDefinition = "text")
     private String imageUrl;
@@ -47,14 +47,14 @@ public class ImageInspection extends BaseTimeEntity {
     @Column(name = "ai_comment", length = 500)
     private String aiComment;
 
-    private ImageInspection(Long productImageId, String imageUrl, String productTitle) {
-        this.productImageId = productImageId;
+    private ImageInspection(Long cardImageId, String imageUrl, String productTitle) {
+        this.cardImageId = cardImageId;
         this.imageUrl = imageUrl;
         this.productTitle = productTitle;
     }
 
-    public static ImageInspection create(Long productImageId, String imageUrl, String productTitle) {
-        return new ImageInspection(productImageId, imageUrl, productTitle);
+    public static ImageInspection create(Long cardImageId, String imageUrl, String productTitle) {
+        return new ImageInspection(cardImageId, imageUrl, productTitle);
     }
 
     public void updateAiResult(InspectionStatus status, String aiComment) {
