@@ -32,4 +32,6 @@ public interface CardRepository {
     boolean existsById(Long id);
 
     Page<Card> searchCards(AdminCardSearchQuery condition, Pageable pageable);
+
+    List<Card> findLatestApprovedCardsExcluding(List<Long> excludeCardIds, int size);
 }

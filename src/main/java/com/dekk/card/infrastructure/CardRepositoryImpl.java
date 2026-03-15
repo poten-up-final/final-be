@@ -13,12 +13,15 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
 public class CardRepositoryImpl implements CardRepository {
+    private static final long NON_EXISTENT_CARD_ID = 0L;
+
     private final CardJpaRepository cardJpaRepository;
 
     @Override
@@ -84,5 +87,19 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public Page<Card> searchCards(AdminCardSearchQuery condition, Pageable pageable) {
         return cardJpaRepository.findAll(CardSpecification.searchByCondition(condition), pageable);
+    }
+
+    @Override
+    public List<Card> findLatestApprovedCardsExcluding(List<Long> excludeCardIds, int size) {
+        List<Long> safeExcludeIds = excludeCardIds.isEmpty() ? List.of(NON_EXISTENT_CARD_ID) : excludeCardIds;
+        Pageable pageable = PageRequest.of(0, size);
+
+        List<Long> cardIds = cardJpaRepository.findLatestApprovedCardIdsExcluding(safeExcludeIds, pageable);
+
+        if (cardIds.isEmpty()) {
+            return List.of();
+        }
+
+        return cardJpaRepository.findAllByIdInWithProductsOrderByUpdatedAt(cardIds);
     }
 }
