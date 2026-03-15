@@ -4,10 +4,9 @@ import com.dekk.deck.domain.model.DeckMember;
 import com.dekk.deck.domain.model.enums.DeckRole;
 import com.dekk.deck.domain.repository.DeckMemberRepository;
 import com.dekk.deck.infrastructure.jpa.DeckMemberJpaRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

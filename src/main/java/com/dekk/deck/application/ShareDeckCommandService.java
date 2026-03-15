@@ -10,11 +10,9 @@ import com.dekk.deck.domain.model.enums.DeckType;
 import com.dekk.deck.domain.repository.DeckMemberRepository;
 import com.dekk.deck.domain.repository.DeckRepository;
 import com.dekk.deck.infrastructure.redis.DeckInviteRedisRepository;
-
 import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,11 +53,13 @@ public class ShareDeckCommandService {
     }
 
     public void joinSharedDeck(Long userId, String token) {
-        Long deckId = deckInviteRedisRepository.getDeckIdByToken(token)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.SHARE_TOKEN_EXPIRED));
+        Long deckId = deckInviteRedisRepository
+                .getDeckIdByToken(token)
+                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.SHARE_TOKEN_EXPIRED));
 
-        Deck deck = deckRepository.findById(deckId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+        Deck deck = deckRepository
+                .findById(deckId)
+                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
 
         validateSharedDeck(deck);
         validateNotAlreadyJoined(deckId, userId);
@@ -70,13 +70,15 @@ public class ShareDeckCommandService {
     }
 
     private Deck getDeckAsHost(Long deckId, Long userId) {
-        DeckMember member = deckMemberRepository.findByDeckIdAndUserId(deckId, userId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+        DeckMember member = deckMemberRepository
+                .findByDeckIdAndUserId(deckId, userId)
+                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
 
         validateHostRole(member);
 
-        return deckRepository.findById(deckId)
-            .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+        return deckRepository
+                .findById(deckId)
+                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
     }
 
     private ShareTokenResult getOrCreateShareToken(Long deckId) {

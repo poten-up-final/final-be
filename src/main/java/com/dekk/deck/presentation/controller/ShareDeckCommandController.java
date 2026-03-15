@@ -27,9 +27,7 @@ public class ShareDeckCommandController implements ShareDeckCommandApi {
     @Override
     @PostMapping("/custom/{customDeckId}/share")
     public ResponseEntity<ApiResponse<ShareTokenResult>> turnOnShare(
-        @AuthenticationPrincipal CustomUserDetails userDetails,
-        @PathVariable("customDeckId") Long customDeckId
-    ) {
+            @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("customDeckId") Long customDeckId) {
         ShareTokenResult result = shareDeckCommandService.turnOnShareAndGetToken(userDetails.getId(), customDeckId);
         return ResponseEntity.ok(ApiResponse.of(DeckResultCode.SHARE_DECK_ON_SUCCESS, result));
     }
@@ -37,9 +35,7 @@ public class ShareDeckCommandController implements ShareDeckCommandApi {
     @Override
     @DeleteMapping("/custom/{customDeckId}/share")
     public ResponseEntity<ApiResponse<Void>> turnOffShare(
-        @AuthenticationPrincipal CustomUserDetails userDetails,
-        @PathVariable("customDeckId") Long customDeckId
-    ) {
+            @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("customDeckId") Long customDeckId) {
         shareDeckCommandService.turnOffShare(userDetails.getId(), customDeckId);
         return ResponseEntity.ok(ApiResponse.from(DeckResultCode.SHARE_DECK_OFF_SUCCESS));
     }
@@ -47,9 +43,7 @@ public class ShareDeckCommandController implements ShareDeckCommandApi {
     @Override
     @PostMapping("/shared/join")
     public ResponseEntity<ApiResponse<Void>> joinSharedDeck(
-        @AuthenticationPrincipal CustomUserDetails userDetails,
-        @Valid @RequestBody SharedDeckJoinRequest request
-    ) {
+            @AuthenticationPrincipal CustomUserDetails userDetails, @Valid @RequestBody SharedDeckJoinRequest request) {
         shareDeckCommandService.joinSharedDeck(userDetails.getId(), request.token());
         return ResponseEntity.ok(ApiResponse.from(DeckResultCode.SHARE_DECK_JOIN_SUCCESS));
     }

@@ -2,7 +2,6 @@ package com.dekk.deck.domain.repository;
 
 import com.dekk.deck.domain.model.DeckMember;
 import com.dekk.deck.domain.model.enums.DeckRole;
-
 import java.util.Optional;
 
 public interface DeckMemberRepository {

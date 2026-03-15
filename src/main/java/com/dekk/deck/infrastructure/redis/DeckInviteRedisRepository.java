@@ -2,7 +2,6 @@ package com.dekk.deck.infrastructure.redis;
 
 import java.time.Duration;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
