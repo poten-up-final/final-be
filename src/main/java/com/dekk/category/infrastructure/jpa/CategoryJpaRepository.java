@@ -18,4 +18,9 @@ public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
     @Query(
             "UPDATE Category c SET c.deletedAt = CURRENT_TIMESTAMP WHERE c.parent.id = :parentId AND c.deletedAt IS NULL")
     void softDeleteAllByParentId(@Param("parentId") Long parentId);
+
+    long countByIdInAndDepth(List<Long> ids, int depth);
+
+    @Query("SELECT c FROM Category c LEFT JOIN FETCH c.parent WHERE c.id IN :ids")
+    List<Category> findAllByIdInWithParent(@Param("ids") List<Long> ids);
 }

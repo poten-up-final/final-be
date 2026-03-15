@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class CategoryRepositoryImpl implements CategoryRepository {
+    private static final int PARENT_DEPTH = 1;
 
     private final CategoryJpaRepository categoryJpaRepository;
 
@@ -37,5 +38,15 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public void softDeleteAllByParentId(Long parentId) {
         categoryJpaRepository.softDeleteAllByParentId(parentId);
+    }
+
+    @Override
+    public long countChildCategoryByIdIn(List<Long> ids) {
+        return categoryJpaRepository.countByIdInAndDepth(ids, PARENT_DEPTH);
+    }
+
+    @Override
+    public List<Category> findAllByIdInWithParent(List<Long> ids) {
+        return categoryJpaRepository.findAllByIdInWithParent(ids);
     }
 }

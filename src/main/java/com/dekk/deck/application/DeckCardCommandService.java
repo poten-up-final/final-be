@@ -62,13 +62,13 @@ public class DeckCardCommandService {
 
     private Deck getDefaultDeckByUserId(Long userId) {
         return deckRepository
-                .findByUserIdAndIsDefaultTrue(userId)
+                .findDefaultDeckByUserId(userId)
                 .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_NOT_FOUND));
     }
 
     private Deck getCustomDeckByUserId(Long deckId, Long userId) {
         return deckRepository
-                .findByIdAndUserId(deckId, userId)
+                .findByIdAndMemberUserId(deckId, userId)
                 .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
     }
 

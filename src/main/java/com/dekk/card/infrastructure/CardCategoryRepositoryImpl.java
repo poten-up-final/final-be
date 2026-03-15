@@ -1,5 +1,6 @@
 package com.dekk.card.infrastructure;
 
+import com.dekk.card.domain.model.CardCategory;
 import com.dekk.card.domain.repository.CardCategoryRepository;
 import com.dekk.card.infrastructure.jpa.CardCategoryJpaRepository;
 import java.util.List;
@@ -23,5 +24,36 @@ public class CardCategoryRepositoryImpl implements CardCategoryRepository {
             return;
         }
         cardCategoryJpaRepository.softDeleteAllByCategoryIdIn(categoryIds);
+    }
+
+    @Override
+    public void softDeleteByCardIdAndCategoryIdIn(Long cardId, List<Long> categoryIds) {
+        if (categoryIds.isEmpty()) {
+            return;
+        }
+        cardCategoryJpaRepository.softDeleteByCardIdAndCategoryIdIn(cardId, categoryIds);
+    }
+
+    @Override
+    public List<CardCategory> findAllByCardId(Long cardId) {
+        return cardCategoryJpaRepository.findAllByCardId(cardId);
+    }
+
+    @Override
+    public List<Long> findCategoryIdsByCardId(Long cardId) {
+        return cardCategoryJpaRepository.findCategoryIdsByCardId(cardId);
+    }
+
+    @Override
+    public List<CardCategory> saveAll(List<CardCategory> cardCategories) {
+        return cardCategoryJpaRepository.saveAll(cardCategories);
+    }
+
+    @Override
+    public List<Long> findCategoryIdsByCardIds(List<Long> cardIds) {
+        if (cardIds.isEmpty()) {
+            return List.of();
+        }
+        return cardCategoryJpaRepository.findCategoryIdsByCardIdIn(cardIds);
     }
 }
