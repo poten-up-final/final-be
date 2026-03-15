@@ -7,6 +7,7 @@ import com.dekk.deck.domain.model.Deck;
 import com.dekk.deck.domain.model.DeckMember;
 import com.dekk.deck.domain.model.enums.DeckRole;
 import com.dekk.deck.domain.model.enums.DeckType;
+import com.dekk.deck.domain.repository.DeckCardRepository;
 import com.dekk.deck.domain.repository.DeckMemberRepository;
 import com.dekk.deck.domain.repository.DeckRepository;
 import com.dekk.deck.infrastructure.redis.DeckInviteRedisRepository;
@@ -25,10 +26,12 @@ public class ShareDeckCommandService {
     private static final Duration TOKEN_TTL = Duration.ofHours(24);
     private static final long OVERLAP_THRESHOLD_SECONDS = 600L;
     private static final int MAX_TOTAL_DECK_COUNT = 9;
+    private static final int MAX_GUEST_COUNT = 5;
 
     private final DeckRepository deckRepository;
     private final DeckMemberRepository deckMemberRepository;
     private final DeckInviteRedisRepository deckInviteRedisRepository;
+    private final DeckCardRepository deckCardRepository;
 
     public ShareTokenResult turnOnShareAndGetToken(Long userId, Long deckId) {
         Deck deck = getDeckAsHost(deckId, userId);
@@ -48,7 +51,6 @@ public class ShareDeckCommandService {
         }
 
         deckMemberRepository.deleteAllGuestsByDeckId(deckId, DeckRole.GUEST);
-
         clearShareToken(deckId);
     }
 
@@ -62,15 +64,47 @@ public class ShareDeckCommandService {
         validateSharedDeck(deck);
         validateNotAlreadyJoined(deckId, userId);
         validateDeckLimit(userId);
+        validateGuestLimit(deckId);
 
         DeckMember guestMember = DeckMember.create(deckId, userId, DeckRole.GUEST);
         deckMemberRepository.save(guestMember);
     }
 
+    public void leaveSharedDeck(Long userId, Long deckId) {
+        DeckMember member = getDeckMemberOrThrow(deckId, userId);
+
+        if (member.getRole() == DeckRole.HOST) {
+            throw new DeckBusinessException(DeckErrorCode.HOST_CANNOT_LEAVE_DECK);
+        }
+
+        deckMemberRepository.delete(member);
+    }
+
+    public void handleHostWithdrawal(Long deckId, Long hostUserId) {
+        DeckMember hostMember = getDeckMemberOrThrow(deckId, hostUserId);
+
+        if (hostMember.getRole() != DeckRole.HOST) {
+            return;
+        }
+
+        Optional<DeckMember> oldestGuest =
+                deckMemberRepository.findFirstByDeckIdAndRoleOrderByCreatedAtAsc(deckId, DeckRole.GUEST);
+
+        if (oldestGuest.isPresent()) {
+            oldestGuest.get().promoteToHost();
+            deckMemberRepository.delete(hostMember);
+        } else {
+            Deck deck = getDeckOrThrow(deckId);
+
+            deckCardRepository.deleteAllByDeckId(deckId);
+            deckMemberRepository.deleteAllByDeckId(deckId);
+            deckRepository.delete(deck);
+            clearShareToken(deckId);
+        }
+    }
+
     private Deck getDeckAsHost(Long deckId, Long userId) {
-        DeckMember member = deckMemberRepository
-                .findByDeckIdAndUserId(deckId, userId)
-                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+        DeckMember member = getDeckMemberOrThrow(deckId, userId);
 
         validateHostRole(member);
 
@@ -85,13 +119,10 @@ public class ShareDeckCommandService {
 
     private ShareTokenResult getOrCreateShareToken(Long deckId) {
         Optional<String> existingToken = deckInviteRedisRepository.getTokenByDeckId(deckId);
+        long remainingSeconds = deckInviteRedisRepository.getRemainingSeconds(deckId);
 
-        if (existingToken.isPresent()) {
-            long remainingSeconds = deckInviteRedisRepository.getRemainingSeconds(deckId);
-
-            if (remainingSeconds > OVERLAP_THRESHOLD_SECONDS) {
-                return new ShareTokenResult(existingToken.get(), remainingSeconds);
-            }
+        if (existingToken.isPresent() && remainingSeconds > OVERLAP_THRESHOLD_SECONDS) {
+            return new ShareTokenResult(existingToken.get(), remainingSeconds);
         }
 
         String newToken = UUID.randomUUID().toString().replace("-", "");
@@ -124,10 +155,23 @@ public class ShareDeckCommandService {
         }
     }
 
+    private void validateGuestLimit(Long deckId) {
+        long guestCount = deckMemberRepository.countByDeckIdAndRole(deckId, DeckRole.GUEST);
+        if (guestCount >= MAX_GUEST_COUNT) {
+            throw new DeckBusinessException(DeckErrorCode.DECK_GUEST_LIMIT_EXCEEDED);
+        }
+    }
+
     private void validateHostRole(DeckMember member) {
         if (member.getRole() != DeckRole.HOST) {
             throw new DeckBusinessException(DeckErrorCode.GUEST_CANNOT_GENERATE_TOKEN);
         }
+    }
+
+    private DeckMember getDeckMemberOrThrow(Long deckId, Long userId) {
+        return deckMemberRepository
+                .findByDeckIdAndUserId(deckId, userId)
+                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
     }
 
     private Deck getDeckOrThrow(Long deckId) {
