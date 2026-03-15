@@ -16,5 +16,5 @@ public interface CardCategoryRepository {
 
     List<CardCategory> saveAll(List<CardCategory> cardCategories);
 
-    List<Long> findCategoryIdsByCardIds(List<Long> cardIds);
+    List<CardCategoryProjection> findCardCategoryProjectionsByCardIdIn(List<Long> cardIds);
 }
