@@ -1,10 +1,13 @@
 package com.dekk.deck.infrastructure;
 
 import com.dekk.deck.domain.model.DeckMember;
+import com.dekk.deck.domain.model.enums.DeckRole;
 import com.dekk.deck.domain.repository.DeckMemberRepository;
 import com.dekk.deck.infrastructure.jpa.DeckMemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,5 +28,15 @@ public class DeckMemberRepositoryImpl implements DeckMemberRepository {
     @Override
     public long countByUserId(Long userId) {
         return jpaRepository.countByUserId(userId);
+    }
+
+    @Override
+    public Optional<DeckMember> findByDeckIdAndUserId(Long deckId, Long userId) {
+        return jpaRepository.findByDeckIdAndUserId(deckId, userId);
+    }
+
+    @Override
+    public void deleteAllGuestsByDeckId(Long deckId, DeckRole role) {
+        jpaRepository.deleteAllGuestsByDeckId(deckId, role);
     }
 }
