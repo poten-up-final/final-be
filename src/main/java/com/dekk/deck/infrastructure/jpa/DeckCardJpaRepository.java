@@ -24,7 +24,7 @@ public interface DeckCardJpaRepository extends JpaRepository<DeckCard, Long> {
     @Query("""
          SELECT d.deckId AS deckId, COUNT(d) AS cardCount
          FROM DeckCard d
-         WHERE d.deckId IN :deckIds
+         WHERE d.deckId IN :deckIds AND d.deletedAt IS NULL
          GROUP BY d.deckId
         """)
     List<DeckCardCountProjection> countCardsByDeckIds(@Param("deckIds") List<Long> deckIds);

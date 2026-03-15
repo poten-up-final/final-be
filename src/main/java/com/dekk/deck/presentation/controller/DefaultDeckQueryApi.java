@@ -11,8 +11,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "기본 보관함 조회 API", description = "기본 보관함 카드 목록 조회 API")
@@ -22,6 +20,5 @@ public interface DefaultDeckQueryApi {
     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공 (SDK20002)")
     @ApiErrorExceptions({DeckErrorCode.class})
     ResponseEntity<ApiResponse<PageResponse<MyDeckCardResult>>> getMyDefaultDeckCards(
-            @Parameter(hidden = true) CustomUserDetails userDetails,
-            @ParameterObject @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable);
+            @Parameter(hidden = true) CustomUserDetails userDetails, @ParameterObject Pageable pageable);
 }
