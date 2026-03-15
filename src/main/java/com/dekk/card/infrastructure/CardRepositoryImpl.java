@@ -8,8 +8,10 @@ import com.dekk.card.domain.model.enums.Platform;
 import com.dekk.card.domain.repository.CardRepository;
 import com.dekk.card.infrastructure.jpa.CardJpaRepository;
 import com.dekk.card.infrastructure.jpa.CardSpecification;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -92,11 +94,11 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public List<Card> findLatestApprovedCardsExcluding(List<Long> excludeCardIds, int size) {
+    public List<Card> findLatestApprovedCardsExcluding(Set<Long> excludeCardIds, int size) {
         int fetchSize = Math.min(size, MAX_FETCH_SIZE);
         List<Long> safeExcludeIds = excludeCardIds.isEmpty()
                 ? List.of(NON_EXISTENT_CARD_ID)
-                : excludeCardIds.subList(0, Math.min(excludeCardIds.size(), MAX_EXCLUDE_SIZE));
+                : new ArrayList<>(excludeCardIds).subList(0, Math.min(excludeCardIds.size(), MAX_EXCLUDE_SIZE));
 
         Pageable pageable = PageRequest.of(0, fetchSize);
 
