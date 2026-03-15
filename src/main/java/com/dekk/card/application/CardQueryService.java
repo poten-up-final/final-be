@@ -24,9 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CardQueryService {
-    private static final int MAX_FETCH_SIZE = 100;
-    private static final int MAX_EXCLUDE_SIZE = 1000;
-
     private final CardRepository cardRepository;
     private final CardCategoryQueryService cardCategoryQueryService;
     private final CategoryQueryService categoryQueryService;
@@ -72,11 +69,7 @@ public class CardQueryService {
     }
 
     public List<MemberCardResult> getLatestCards(List<Long> excludeCardIds, int size) {
-        int fetchSize = Math.min(size, MAX_FETCH_SIZE);
-
-        List<Long> safeExcludeIds = excludeCardIds.subList(0, Math.min(excludeCardIds.size(), MAX_EXCLUDE_SIZE));
-
-        return cardRepository.findLatestApprovedCardsExcluding(safeExcludeIds, fetchSize).stream()
+        return cardRepository.findLatestApprovedCardsExcluding(excludeCardIds, size).stream()
                 .map(MemberCardResult::from)
                 .toList();
     }

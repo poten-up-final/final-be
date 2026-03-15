@@ -20,6 +20,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class CardRepositoryImpl implements CardRepository {
+    private static final int MAX_FETCH_SIZE = 100;
+    private static final int MAX_EXCLUDE_SIZE = 1000;
     private static final long NON_EXISTENT_CARD_ID = 0L;
 
     private final CardJpaRepository cardJpaRepository;
@@ -91,8 +93,12 @@ public class CardRepositoryImpl implements CardRepository {
 
     @Override
     public List<Card> findLatestApprovedCardsExcluding(List<Long> excludeCardIds, int size) {
-        List<Long> safeExcludeIds = excludeCardIds.isEmpty() ? List.of(NON_EXISTENT_CARD_ID) : excludeCardIds;
-        Pageable pageable = PageRequest.of(0, size);
+        int fetchSize = Math.min(size, MAX_FETCH_SIZE);
+        List<Long> safeExcludeIds = excludeCardIds.isEmpty()
+                ? List.of(NON_EXISTENT_CARD_ID)
+                : excludeCardIds.subList(0, Math.min(excludeCardIds.size(), MAX_EXCLUDE_SIZE));
+
+        Pageable pageable = PageRequest.of(0, fetchSize);
 
         List<Long> cardIds = cardJpaRepository.findLatestApprovedCardIdsExcluding(safeExcludeIds, pageable);
 
