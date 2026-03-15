@@ -76,9 +76,14 @@ public class ShareDeckCommandService {
 
         validateHostRole(member);
 
-        return deckRepository
+        Deck deck = deckRepository
                 .findById(deckId)
                 .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+        if (deck.getDeckType() == DeckType.DEFAULT) {
+            throw new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_CANNOT_BE_MODIFIED);
+        }
+
+        return deck;
     }
 
     private ShareTokenResult getOrCreateShareToken(Long deckId) {
