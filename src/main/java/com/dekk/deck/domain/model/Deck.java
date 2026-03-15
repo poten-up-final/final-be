@@ -66,16 +66,12 @@ public class Deck extends BaseTimeEntity {
     }
 
     public void changeToShared() {
-        if (this.deckType == DeckType.DEFAULT) {
-            throw new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_CANNOT_BE_MODIFIED);
-        }
+        validateCustomModifiable();
         this.deckType = DeckType.SHARED;
     }
 
     public void changeToCustom() {
-        if (this.deckType == DeckType.DEFAULT) {
-            throw new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_CANNOT_BE_MODIFIED);
-        }
+        validateCustomModifiable();
         this.deckType = DeckType.CUSTOM;
     }
 
