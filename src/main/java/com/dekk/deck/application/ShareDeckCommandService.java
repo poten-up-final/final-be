@@ -57,9 +57,7 @@ public class ShareDeckCommandService {
                 .getDeckIdByToken(token)
                 .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.SHARE_TOKEN_EXPIRED));
 
-        Deck deck = deckRepository
-                .findById(deckId)
-                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+        Deck deck = getDeckOrThrow(deckId);
 
         validateSharedDeck(deck);
         validateNotAlreadyJoined(deckId, userId);
@@ -76,9 +74,8 @@ public class ShareDeckCommandService {
 
         validateHostRole(member);
 
-        Deck deck = deckRepository
-                .findById(deckId)
-                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
+        Deck deck = getDeckOrThrow(deckId);
+
         if (deck.getDeckType() == DeckType.DEFAULT) {
             throw new DeckBusinessException(DeckErrorCode.DEFAULT_DECK_CANNOT_BE_MODIFIED);
         }
@@ -131,5 +128,11 @@ public class ShareDeckCommandService {
         if (member.getRole() != DeckRole.HOST) {
             throw new DeckBusinessException(DeckErrorCode.GUEST_CANNOT_GENERATE_TOKEN);
         }
+    }
+
+    private Deck getDeckOrThrow(Long deckId) {
+        return deckRepository
+                .findById(deckId)
+                .orElseThrow(() -> new DeckBusinessException(DeckErrorCode.CUSTOM_DECK_NOT_FOUND));
     }
 }
