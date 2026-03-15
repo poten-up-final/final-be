@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -20,8 +22,16 @@ public class DeckInviteRedisRepository {
         String deckKey = DECK_KEY_PREFIX + deckId;
         String tokenKey = TOKEN_KEY_PREFIX + token;
 
-        redisTemplate.opsForValue().set(deckKey, token, ttl);
-        redisTemplate.opsForValue().set(tokenKey, String.valueOf(deckId), ttl);
+        redisTemplate.execute(new SessionCallback<List<Object>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public List<Object> execute(RedisOperations operations) {
+                operations.multi();
+                operations.opsForValue().set(deckKey, token, ttl);
+                operations.opsForValue().set(tokenKey, String.valueOf(deckId), ttl);
+                return operations.exec();
+            }
+        });
     }
 
     public Optional<String> getTokenByDeckId(Long deckId) {
