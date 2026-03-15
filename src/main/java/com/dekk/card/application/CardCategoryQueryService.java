@@ -22,4 +22,8 @@ public class CardCategoryQueryService {
                         CardCategoryProjection::cardId,
                         Collectors.mapping(CardCategoryProjection::categoryId, Collectors.toList())));
     }
+
+    public List<Long> getCategoryIdsByCardId(Long cardId) {
+        return cardCategoryRepository.findCategoryIdsByCardId(cardId);
+    }
 }
