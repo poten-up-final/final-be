@@ -18,6 +18,9 @@ public enum DeckResultCode implements ResultCode {
     CUSTOM_DECK_CARD_DELETE_SUCCESS(HttpStatus.OK, "SD20010", "커스텀 보관함 내 카드 삭제 성공"),
     CUSTOM_DECK_CARD_LIST_SUCCESS(HttpStatus.OK, "SD20011", "커스텀 보관함 카드 목록 조회 성공"),
     DECK_LIST_SUCCESS(HttpStatus.OK, "SD20012", "보관함 통합 목록 조회 성공"),
+    SHARE_DECK_ON_SUCCESS(HttpStatus.OK, "SD20013", "쉐어덱 공유 상태 켜기 및 토큰 발급 성공"),
+    SHARE_DECK_OFF_SUCCESS(HttpStatus.OK, "SD20014", "쉐어덱 공유 상태 끄기 성공"),
+    SHARE_DECK_JOIN_SUCCESS(HttpStatus.OK, "SD20015", "초대 링크를 통한 쉐어덱 참여 성공"),
     ;
 
     private final HttpStatus status;

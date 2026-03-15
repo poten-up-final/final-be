@@ -12,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,13 +19,7 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.SQLDelete;
 
 @Entity
-@Table(
-        name = "deck_members",
-        uniqueConstraints = {
-            @UniqueConstraint(
-                    name = "uk_deck_member_user_deck",
-                    columnNames = {"user_id", "deck_id"})
-        })
+@Table(name = "deck_members")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE deck_members SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")

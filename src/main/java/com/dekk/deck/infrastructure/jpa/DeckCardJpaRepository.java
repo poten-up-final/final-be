@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,7 +17,9 @@ public interface DeckCardJpaRepository extends JpaRepository<DeckCard, Long> {
 
     Optional<DeckCard> findByDeckIdAndCardId(Long deckId, Long CardId);
 
-    void deleteAllByDeckId(Long deckId);
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE DeckCard dc SET dc.deletedAt = CURRENT_TIMESTAMP WHERE dc.deckId = :deckId AND dc.deletedAt IS NULL")
+    void deleteAllByDeckId(@Param("deckId") Long deckId);
 
     @Query("""
          SELECT d.deckId AS deckId, COUNT(d) AS cardCount
@@ -26,7 +29,8 @@ public interface DeckCardJpaRepository extends JpaRepository<DeckCard, Long> {
         """)
     List<DeckCardCountProjection> countCardsByDeckIds(@Param("deckIds") List<Long> deckIds);
 
-    long countByDeckId(Long deckId);
+    @Query("SELECT COUNT(dc) FROM DeckCard dc WHERE dc.deckId = :deckId AND dc.deletedAt IS NULL")
+    long countByDeckId(@Param("deckId") Long deckId);
 
     @Query(value = """
         SELECT * FROM (
